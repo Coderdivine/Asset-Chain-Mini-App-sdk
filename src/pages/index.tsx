@@ -204,7 +204,7 @@ function Dashboard() {
           ))}
         </div>
 
-        {/* Third Box */}
+        
         <div className="p-6 bg-gray-100 rounded">
           <h2 className="text-lg font-bold mb-4">Latest Transactions</h2>
           {transactionHistory.map((tx) => (
