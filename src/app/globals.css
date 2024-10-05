@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400&family=Karla:ital,wght@0,400;0,700;1,400;1,700");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,7 +18,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Karla";
 }
 
 @layer utilities {
