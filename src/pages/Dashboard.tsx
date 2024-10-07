@@ -36,7 +36,7 @@ function Dashboard() {
   } = dashboardContext;
   const { disconnectWallet, sendTransaction, userFriendlyAddress } =
     useTonWallet();
-  const { disconnectEvmWallet, sendTransactionEvm } = useEvmWallet();
+  const { disconnectEvmWallet, sendTransactionEvm, isConnecting } = useEvmWallet();
 
   const onlyOneWallet = () => {
     if(tonConnected){
@@ -63,16 +63,23 @@ function Dashboard() {
   }, [tonConnected, evmConnected, selectedWallet]);
 
   const allowDisconnect = async () => {
-    if (selectedWallet) {
-      if (selectedWallet.currency == "RWA") {
-        await disconnectEvmWallet();
-      }
-      if (selectedWallet.currency == "TON") {
-        await disconnectWallet();
-      }
+    if (!selectedWallet) return;
+  
+    const actions: { [key: string]: () => Promise<void> } = {
+      RWA: disconnectEvmWallet,
+      TON: disconnectWallet,
+    };
+  
+    const currency: keyof typeof actions = selectedWallet?.currency as keyof typeof actions;
+  
+    if (currency && actions[currency]) {
+      await actions[currency]();
+      setDisableEvm(false);
+      setDisableTon(false);
       setWalletConnected(false);
     }
   };
+  
 
   const walletAssets: WalletAsset[] = [
     {
@@ -108,6 +115,7 @@ function Dashboard() {
 
   const handleSendTransaction = async () => {
     try {
+      setPending(true);
       if (selectedWallet) {
         if (tonConnected || evmConnected) {
           if (selectedWallet.currency == "TON") {
@@ -118,6 +126,7 @@ function Dashboard() {
             });
             if (tx) {
               console.log({ "TON": tx });
+              toggleSendModal();
             }
           }
           if (selectedWallet.currency == "RWA") {
@@ -127,6 +136,7 @@ function Dashboard() {
             });
             if (tx) {
               console.log({ "RWA": tx });
+              toggleSendModal();
             }
           }
         }
@@ -136,6 +146,7 @@ function Dashboard() {
       setPending(false);
     } catch (error) {
       console.log({ error });
+      setPending(false);
     }
   };
 
@@ -154,7 +165,7 @@ function Dashboard() {
             onClick={connectWallet}
             className="bg-gray-800 text-white px-4 py-2 rounded"
           >
-            {walletConnected ? "Connected" : "Connect"}
+           { !isConnecting ? "Connect" : "Connecting" }
           </button>
         ) : (
           <button

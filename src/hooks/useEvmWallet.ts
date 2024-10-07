@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from '@/configs/networks';
-import { getAccount, connect, disconnect, sendTransaction, getConnections } from '@wagmi/core'
+import { getAccount, connect, disconnect, sendTransaction, getConnections, reconnect } from '@wagmi/core'
 import { parseEther, parseGwei } from 'viem'
 import { wagmiConfig as config } from '../configs/wagmiConfig'
 import { metaMask, injected, MetaMaskParameters } from "@wagmi/connectors";
@@ -27,7 +27,7 @@ export const useEvmWallet = () => {
   const { evmConnected, setEvmConnected, setSelectedWallet, selectedWallet } = dashboardContext;
 
   useEffect(() => {
-    console.log({ evmState: status, connector, isConnecting, isConnected });
+    console.log({ evmState: status, address, connector, isConnecting, isConnected });
     if(status == "connected"){
       setEvmConnected(true);
       selectWallet("assetchain");
@@ -105,11 +105,29 @@ export const useEvmWallet = () => {
     }
   };
 
+  const allowReconnect = async () => {
+    try {
+      const result = await reconnect(config, { connectors: [ metaMask(metamaskOptions) ] });
+      if(result){
+        console.log({ allowReconnect: result });
+      }
+    } catch (error: any) {
+      console.log({ allowReconnectError: error });
+    }
+  }
+
+  useEffect(() => {
+    if(!isConnected) {
+      allowReconnect();
+    }
+  },[isConnected]);
+
   return {
     connectEvmWallet,
     disconnectEvmWallet,
     sendTransactionEvm,
     evmAddress: address,
-    isConnected
+    isConnected,
+    isConnecting
   };
 };

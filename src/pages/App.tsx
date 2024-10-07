@@ -19,7 +19,7 @@ export const DashboardContext = createContext<DashboardContextType>({
 function AppPage() {
   const [tonConnected, setTonConnected] = useState(false);
   const [evmConnected, setEvmConnected] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState<Networks>();
+  const [selectedWallet, setSelectedWallet] = useState<Network>();
   const [disableTon, setDisableTon] = useState(false);
   const [disbleEvm, setDisableEvm] = useState(false);
 

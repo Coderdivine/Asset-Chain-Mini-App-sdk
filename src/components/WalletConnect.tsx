@@ -7,7 +7,7 @@ import { concatAddress } from "@/utils/concatAddress";
 const ConnectButton = ({ toggleModal }: ConnectButton) => {
   const { connectWallet, disconnectWallet, userFriendlyAddress } =
     useTonWallet();
-  const { connectEvmWallet, evmAddress, isConnected } = useEvmWallet();
+  const { connectEvmWallet, evmAddress, isConnecting } = useEvmWallet();
   const dashboardContext = useContext(DashboardContext);
   if (!dashboardContext) {
     throw new Error(
@@ -32,7 +32,8 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
           </h2>
         </span>
         <div className="flex justify-around">
-          <button
+          {!disbleEvm && <div>
+            <button
             disabled={disbleEvm}
             onClick={connectEvmWallet}
             className="flex items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200"
@@ -43,13 +44,14 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
               className="w-8 h-8 mr-4 rounded-full"
             />
             {!evmConnected ? (
-              <span className="font-bold">AssetChain</span>
+              <span className="font-bold">{isConnecting ? "Connecting" : "AssetChain" }</span>
             ) : (
               <span className="font-bold">{evmAddress && addressEVM}</span>
             )}
-          </button>
+          </button></div>}
 
-          {!tonConnected ? (
+          { !disableTon &&  <div>
+            {!tonConnected ? (
             <div>
               <button
                 disabled={disableTon}
@@ -79,6 +81,7 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
               </button>
             </div>
           )}
+          </div> }
         </div>
       </div>
     </div>

@@ -62,6 +62,7 @@ export const useTonWallet = () => {
         await tonConnectUI.disconnect();
         await close();
         setTonConnected(false);
+        setTonConnected(false);
         setSelectedWallet();
     } else {
         console.log({ message: "Connect wallet first" });
