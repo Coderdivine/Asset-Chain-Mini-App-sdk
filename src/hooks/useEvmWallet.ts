@@ -101,7 +101,7 @@ export const useEvmWallet = () => {
         return result;
       }
     } catch (error: any) {
-      console.error(error);
+      console.error({ error });
     }
   };
 
