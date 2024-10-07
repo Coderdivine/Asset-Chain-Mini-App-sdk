@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useTonWallet } from "../hooks/useTonWallet";
 import { DashboardContext } from "@/pages/App";
 import { useEvmWallet } from "@/hooks/useEvmWallet";

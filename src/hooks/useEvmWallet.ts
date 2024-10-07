@@ -3,19 +3,7 @@ import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from '@/configs/networks';
 import { getAccount, connect, disconnect, sendTransaction, getConnections, reconnect } from '@wagmi/core'
 import { parseEther, parseGwei } from 'viem'
-import { wagmiConfig as config } from '../configs/wagmiConfig'
-import { metaMask, injected, MetaMaskParameters } from "@wagmi/connectors";
-import { INFURA_KEY } from "@/configs";
-import { mainnet } from "viem/chains";
-const metamaskOptions: MetaMaskParameters = {
-  dappMetadata: {
-      name:"Asset Chain Starter kit"
-  },
-  enableAnalytics: false,
-  infuraAPIKey: INFURA_KEY,
-  useDeeplink: true
-}
-
+import { coinbaseConfig, wagmiConfig as config, metaMaskConfig } from '../configs/wagmiConfig'
 
 export const useEvmWallet = () => {
   const { address, chain, chainId, connector, isConnecting, status, isConnected } = getAccount(config);
@@ -61,7 +49,7 @@ export const useEvmWallet = () => {
     try {
      if(!isConnected) {
       console.log("Connect EVM wallet");
-      const result = await connect(config, { connector: metaMask(metamaskOptions) });
+      const result = await connect(config, { connector: metaMaskConfig });
       if(result){
         console.log({ result });
         setEvmConnected(true);
@@ -107,7 +95,7 @@ export const useEvmWallet = () => {
 
   const allowReconnect = async () => {
     try {
-      const result = await reconnect(config, { connectors: [ metaMask(metamaskOptions) ] });
+      const result = await reconnect(config, { connectors: [ metaMaskConfig ] });
       if(result){
         console.log({ allowReconnect: result });
       }

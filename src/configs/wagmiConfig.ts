@@ -9,9 +9,10 @@ const metamaskOptions: MetaMaskParameters = {
     dappMetadata: {
         name:"Asset Chain Starter kit"
     },
-    enableAnalytics: false,
+    enableAnalytics: true,
+    extensionOnly: false,
     infuraAPIKey,
-    useDeeplink: true
+    useDeeplink: true,
 }
 
 const coinBaseOptions: CoinbaseWalletParameters = {
@@ -20,11 +21,15 @@ const coinBaseOptions: CoinbaseWalletParameters = {
 
 const walletConnectOptions: WalletConnectParameters = {
     projectId
-} 
+}
+
+export const coinbaseConfig = coinbaseWallet(coinBaseOptions);
+export const metaMaskConfig = metaMask(metamaskOptions);
+export const walletConnectConfig = walletConnect(walletConnectOptions);
 
 export const wagmiConfig = createConfig({
   chains: [mainnet, sepolia],
-  connectors: [ injected(), coinbaseWallet(coinBaseOptions), metaMask(metamaskOptions), walletConnect(walletConnectOptions)],
+  connectors: [ coinbaseConfig, metaMaskConfig, walletConnectConfig ],
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
