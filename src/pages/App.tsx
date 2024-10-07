@@ -3,6 +3,7 @@ import React, { createContext, useState } from "react";
 import Dashboard from "./Dashboard";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 import AppKit from "@/context/magmiProvider";
+import { MANIFEST_URL } from "@/configs";
 export const DashboardContext = createContext<DashboardContextType>({
   tonConnected: false,
   setTonConnected: () => {},
@@ -15,6 +16,7 @@ export const DashboardContext = createContext<DashboardContextType>({
   disbleEvm: false,
   setDisableEvm: () => {},
 });
+const manifestUrl = MANIFEST_URL;
 
 function AppPage() {
   const [tonConnected, setTonConnected] = useState(false);
@@ -26,7 +28,7 @@ function AppPage() {
   return (
     <div>
       <AppKit>
-        <TonConnectUIProvider manifestUrl="https://api-staging.clanofraiders.com/tonconnect-manifest.json">
+        <TonConnectUIProvider manifestUrl={manifestUrl}>
           <DashboardContext.Provider
             value={{
               tonConnected,

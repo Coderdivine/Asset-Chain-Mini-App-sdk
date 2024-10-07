@@ -17,6 +17,7 @@
     "next": "14.2.14",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tonweb": "^0.0.66",
     "viem": "^2.21.19"
   },
   "devDependencies": {

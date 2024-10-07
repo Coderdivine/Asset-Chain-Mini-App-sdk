@@ -6,6 +6,8 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from "@/configs/networks";
+import TonWeb from "tonweb";
+const tonWeb = new TonWeb();
 
 export const useTonWallet = () => {
   const { state, open, close, } = useTonConnectModal();
@@ -36,6 +38,7 @@ export const useTonWallet = () => {
     }
     if(state.closeReason == "wallet-selected") {
         setTonConnected(true);
+        selectWallet("ton");
     }
     if(state.closeReason == null && userFriendlyAddress.length) {
         setTonConnected(true);
@@ -76,13 +79,14 @@ export const useTonWallet = () => {
   const sendTransaction = async (txParams: any) => {
     try {
       txParams.from = userFriendlyAddress;
+      const value = tonWeb.utils.toNano(txParams.value);
+      console.log({ value });
       const tx = await tonConnectUI.sendTransaction({
         validUntil: Date.now() + 1000000,
         messages: [
           {
             address: txParams.to,
-            amount: txParams.value,
-            payload: txParams.payload,
+            amount: value.toString(),
           },
         ],
       });
@@ -98,5 +102,6 @@ export const useTonWallet = () => {
     sendTransaction,
     userFriendlyAddress,
     tonConnected,
+    state
   };
 };

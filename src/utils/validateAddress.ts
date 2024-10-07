@@ -5,7 +5,7 @@ interface AddressResult {
   type: AddressType;
 }
 
-function verifyAddress(address: string): AddressResult {
+export function verifyAddress(address: string): AddressResult {
   const hexRegex = /^0x[a-fA-F0-9]{40}$/;
   const base64Regex = /^[A-Za-z0-9+/=]{44}$/;
 

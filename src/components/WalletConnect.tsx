@@ -44,7 +44,7 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
               className="w-8 h-8 mr-4 rounded-full"
             />
             {!evmConnected ? (
-              <span className="font-bold">{isConnecting ? "Connecting" : "AssetChain" }</span>
+              <span className="font-bold">{ "AssetChain" }</span>
             ) : (
               <span className="font-bold">{evmAddress && addressEVM}</span>
             )}
