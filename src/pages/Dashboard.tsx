@@ -144,18 +144,16 @@ function Dashboard() {
       if (selectedWallet) {
         if (tonConnected || evmConnected) {
           if (selectedWallet.currency == "TON") {
-            if (isBase64 == selectedWallet.addressType) {
-              setAddressFormat("");
-              const tx = await sendTransaction({
-                value: sendAmount,
-                to: recipientAddress,
-              });
+            setAddressFormat("");
+            const tx = await sendTransaction({
+              value: sendAmount,
+              to: recipientAddress,
+            });
 
-              if (tx) {
-                console.log({ TON: tx });
-                toggleSendModal();
-                setHash(tx.boc);
-              }
+            if (tx) {
+              console.log({ TON: tx });
+              toggleSendModal();
+              setHash(tx.boc);
             }
           }
           setAddressFormat(`Wrong address format for ${selectedWallet.name}`);
