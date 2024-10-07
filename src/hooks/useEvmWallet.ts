@@ -61,7 +61,7 @@ export const useEvmWallet = () => {
     try {
      if(!isConnected) {
       console.log("Connect EVM wallet");
-      const result = await connect(config, { connector: injected() });
+      const result = await connect(config, { connector: metaMask(metamaskOptions) });
       if(result){
         console.log({ result });
         setEvmConnected(true);
