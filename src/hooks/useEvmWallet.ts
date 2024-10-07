@@ -95,7 +95,7 @@ export const useEvmWallet = () => {
 
   const allowReconnect = async () => {
     try {
-      const result = await reconnect(config, { connectors: [ metaMaskConfig ] });
+      const result = await reconnect(config, { connectors: [ walletConnectConfig ] });
       if(result){
         console.log({ allowReconnect: result });
       }
