@@ -9,6 +9,7 @@ export const useEvmWallet = () => {
   const { address, chain, chainId, connector, isConnecting, status, isConnected } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
   const connections = getConnections(config);
+  const defaultConnector = metaMaskConfig;
   if (!dashboardContext) {
     throw new Error('useDashboardContext must be used within a DashboardProvider');
   }
@@ -49,7 +50,7 @@ export const useEvmWallet = () => {
     try {
      if(!isConnected) {
       console.log("Connect EVM wallet");
-      const result = await connect(config, { connector: walletConnectConfig });
+      const result = await connect(config, { connector: defaultConnector });
       if(result){
         console.log({ result });
         setEvmConnected(true);
@@ -95,7 +96,7 @@ export const useEvmWallet = () => {
 
   const allowReconnect = async () => {
     try {
-      const result = await reconnect(config, { connectors: [ walletConnectConfig ] });
+      const result = await reconnect(config, { connectors: [ defaultConnector ] });
       if(result){
         console.log({ allowReconnect: result });
       }

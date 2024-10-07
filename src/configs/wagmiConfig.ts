@@ -19,7 +19,7 @@ const metamaskOptions: MetaMaskParameters = {
     enableAnalytics: true,
     extensionOnly: false,
     infuraAPIKey,
-    useDeeplink: true,
+    useDeeplink: false,
 }
 
 const coinBaseOptions: CoinbaseWalletParameters = {
@@ -29,6 +29,9 @@ const coinBaseOptions: CoinbaseWalletParameters = {
 const walletConnectOptions: WalletConnectParameters = {
     projectId,
     metadata,
+    isNewChainsStale: true,
+    disableProviderPing: false, 
+    customStoragePrefix: 'wagmi',
     qrModalOptions: { 
         themeMode: 'dark', 
     }, 
@@ -39,9 +42,9 @@ export const metaMaskConfig = metaMask(metamaskOptions);
 export const walletConnectConfig = walletConnect(walletConnectOptions);
 
 export const wagmiConfig = createConfig({
-  chains: [ mainnet ],
+  chains: [ AssetChainMainnet ],
   connectors: [ coinbaseConfig, metaMaskConfig, walletConnectConfig ],
   transports: {
-    [mainnet.id]: http()
+    [AssetChainMainnet.id]: http()
   },
 })
