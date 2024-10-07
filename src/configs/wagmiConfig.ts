@@ -2,6 +2,7 @@ import { http, createConfig, injected } from '@wagmi/core'
 import { mainnet, sepolia } from '@wagmi/core/chains'
 import { coinbaseWallet, metaMask, walletConnect, MetaMaskParameters, CoinbaseWalletParameters, WalletConnectParameters } from '@wagmi/connectors'
 import { INFURA_KEY, PROJECT_ID } from '.';
+import { AssetChainMainnet } from './chains';
 const projectId = PROJECT_ID;
 const infuraAPIKey = INFURA_KEY;
 
@@ -28,9 +29,10 @@ export const metaMaskConfig = metaMask(metamaskOptions);
 export const walletConnectConfig = walletConnect(walletConnectOptions);
 
 export const wagmiConfig = createConfig({
-  chains: [mainnet, sepolia],
+  chains: [ AssetChainMainnet, mainnet, sepolia ],
   connectors: [ coinbaseConfig, metaMaskConfig, walletConnectConfig ],
   transports: {
+    [AssetChainMainnet.id]: http(),
     [mainnet.id]: http(),
     [sepolia.id]: http(),
   },

@@ -3,7 +3,7 @@ import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from '@/configs/networks';
 import { getAccount, connect, disconnect, sendTransaction, getConnections, reconnect } from '@wagmi/core'
 import { parseEther, parseGwei } from 'viem'
-import { coinbaseConfig, wagmiConfig as config, metaMaskConfig } from '../configs/wagmiConfig'
+import { coinbaseConfig, wagmiConfig as config, metaMaskConfig, walletConnectConfig } from '../configs/wagmiConfig'
 
 export const useEvmWallet = () => {
   const { address, chain, chainId, connector, isConnecting, status, isConnected } = getAccount(config);
@@ -49,7 +49,7 @@ export const useEvmWallet = () => {
     try {
      if(!isConnected) {
       console.log("Connect EVM wallet");
-      const result = await connect(config, { connector: metaMaskConfig });
+      const result = await connect(config, { connector: walletConnectConfig });
       if(result){
         console.log({ result });
         setEvmConnected(true);
