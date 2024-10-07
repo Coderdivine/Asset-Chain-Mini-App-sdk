@@ -7,6 +7,7 @@ import { useState, useEffect, useContext } from "react";
 import { DashboardContext } from "./App";
 import { concatAddress } from "@/utils/concatAddress";
 import { onCopy } from "@/utils/onCopy";
+import { useEvmWallet } from "@/hooks/useEvmWallet";
 
 function Dashboard() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -29,9 +30,26 @@ function Dashboard() {
     evmConnected,
     setEvmConnected,
     selectedWallet,
+    setSelectedWallet,
+    setDisableTon,
+    setDisableEvm 
   } = dashboardContext;
   const { disconnectWallet, sendTransaction, userFriendlyAddress } =
     useTonWallet();
+  const { disconnectEvmWallet, sendTransactionEvm } = useEvmWallet();
+
+  const onlyOneWallet = () => {
+    if(tonConnected){
+      setDisableEvm(true);
+    }
+    if(evmConnected) {
+      setDisableTon(true);
+    }
+  };
+
+  useEffect(() => {
+    onlyOneWallet();
+  }, [ tonConnected, evmConnected]);
 
   useEffect(() => {
     if (tonConnected || evmConnected) {
@@ -39,20 +57,31 @@ function Dashboard() {
     } else {
       setWalletConnected(false);
     }
+    if(selectedWallet){
+      setWalletConnected(true);
+    }
   }, [tonConnected, evmConnected, selectedWallet]);
 
-  const allowDisconnect = () => {
-    disconnectWallet();
-    setWalletConnected(false);
+  const allowDisconnect = async () => {
+    if (selectedWallet) {
+      if (selectedWallet.currency == "RWA") {
+        await disconnectEvmWallet();
+      }
+      if (selectedWallet.currency == "TON") {
+        await disconnectWallet();
+      }
+      setWalletConnected(false);
+    }
   };
 
   const walletAssets: WalletAsset[] = [
     {
       id: 1,
-      image: "https://pbs.twimg.com/profile_images/1833486393823096832/N39rUf-e_400x400.png",
+      image:
+        "https://pbs.twimg.com/profile_images/1833486393823096832/N39rUf-e_400x400.png",
       balance: "10",
       symbol: "TON",
-    }
+    },
   ];
 
   const walletAssetsEVM: WalletAsset[] = [
@@ -61,22 +90,14 @@ function Dashboard() {
       image: "https://etherscan.io/token/images/rwa_32.png",
       balance: "10,000",
       symbol: "RWA",
-    },
-    {
-      id: 2,
-      image: "https://etherscan.io/token/images/tethernew_32.png",
-      balance: "25,000",
-      symbol: "USDT",
-    },
-    {
-      id: 3,
-      image:
-        "https://cache.tonapi.io/imgproxy/4KCMNm34jZLXt0rqeFm4rH-BK4FoK76EVX9r0cCIGDg/rs:fill:200:200:1/g:no/aHR0cHM6Ly9jZG4uam9pbmNvbW11bml0eS54eXovY2xpY2tlci9ub3RfbG9nby5wbmc.webp",
-      balance: "25,000",
-      symbol: "NOT",
-    },
+    }
   ];
-
+  
+  const Assets = [
+    ...(tonConnected ? walletAssets : []),
+    ...(evmConnected ? walletAssetsEVM : [])
+  ];
+  
   const transactionHistory: Transaction[] = [
     { id: 1, amount: "50.00 RWA", date: "2024-10-05", txHash: "0x123...0xfe" },
     { id: 2, amount: "15 USDC", date: "2024-10-03", txHash: "0x456...0Bfe" },
@@ -96,11 +117,17 @@ function Dashboard() {
               payload: "",
             });
             if (tx) {
-              console.log({ tx });
+              console.log({ "TON": tx });
             }
           }
           if (selectedWallet.currency == "RWA") {
-            console.log("Development");
+            const tx = await sendTransactionEvm({
+              value: sendAmount,
+              to: recipientAddress,
+            });
+            if (tx) {
+              console.log({ "RWA": tx });
+            }
           }
         }
       } else {
@@ -108,7 +135,7 @@ function Dashboard() {
       }
       setPending(false);
     } catch (error) {
-       console.log({ error });
+      console.log({ error });
     }
   };
 
@@ -134,7 +161,7 @@ function Dashboard() {
             onClick={allowDisconnect}
             className="bg-gray-800 text-white px-4 py-2 rounded"
           >
-            Disconnect { selectedWallet && selectedWallet?.currency || ""}
+            Disconnect {(selectedWallet && selectedWallet?.currency) || ""}
           </button>
         )}
       </header>
@@ -211,7 +238,7 @@ function Dashboard() {
         </div>
       )}
 
-      <main className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <main className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="p-6 bg-gray-100 rounded">
           <h1 className="text-lg font-bold">AssetChain Starter Kit</h1>
           <p className="text-sm mt-2">
@@ -243,17 +270,17 @@ function Dashboard() {
           )}
         </div>
 
-        { tonConnected && <AssetList
-          walletAssets={walletAssets}
-          toggleSendModal={toggleSendModal}
-          showBalance={false}
-        />}
-        { evmConnected && <AssetList
-          walletAssets={walletAssets}
-          toggleSendModal={toggleSendModal}
-          showBalance={false}
-        />}
-        <Transactions transactionHistory={transactionHistory} />
+        <div>
+          {(evmConnected || tonConnected) && (
+            <AssetList
+              walletAssets={Assets}
+              toggleSendModal={toggleSendModal}
+              showBalance={false}
+            />
+          )}
+        </div>
+
+        {/* <Transactions transactionHistory={transactionHistory} /> */}
       </main>
     </div>
   );

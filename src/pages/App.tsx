@@ -2,20 +2,26 @@
 import React, { createContext, useState } from "react";
 import Dashboard from "./Dashboard";
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import AppKit from "@/context/web3modal";
+import AppKit from "@/context/magmiProvider";
 export const DashboardContext = createContext<DashboardContextType>({
   tonConnected: false,
   setTonConnected: () => {},
   evmConnected: false,
   setEvmConnected: () => {},
-  selectedWallet:{}, 
-  setSelectedWallet:() => {},
+  selectedWallet: {},
+  setSelectedWallet: () => {},
+  disableTon: false,
+  setDisableTon: () => {},
+  disbleEvm: false,
+  setDisableEvm: () => {},
 });
 
 function AppPage() {
   const [tonConnected, setTonConnected] = useState(false);
   const [evmConnected, setEvmConnected] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<Networks>();
+  const [disableTon, setDisableTon] = useState(false);
+  const [disbleEvm, setDisableEvm] = useState(false);
 
   return (
     <div>
@@ -27,14 +33,18 @@ function AppPage() {
               setTonConnected,
               evmConnected,
               setEvmConnected,
-              selectedWallet, 
-              setSelectedWallet
+              selectedWallet,
+              setSelectedWallet,
+              disableTon,
+              setDisableTon,
+              disbleEvm,
+              setDisableEvm,
             }}
           >
             <Dashboard />
           </DashboardContext.Provider>
         </TonConnectUIProvider>
-       </AppKit>
+      </AppKit>
     </div>
   );
 }

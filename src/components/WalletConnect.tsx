@@ -5,14 +5,19 @@ import { useEvmWallet } from "@/hooks/useEvmWallet";
 import { concatAddress } from "@/utils/concatAddress";
 
 const ConnectButton = ({ toggleModal }: ConnectButton) => {
-  const { connectWallet, disconnectWallet, userFriendlyAddress } = useTonWallet();
-  const { connectEvmWallet, disconnectEvmWallet, evmAddress } = useEvmWallet();
+  const { connectWallet, disconnectWallet, userFriendlyAddress } =
+    useTonWallet();
+  const { connectEvmWallet, evmAddress, isConnected } = useEvmWallet();
   const dashboardContext = useContext(DashboardContext);
-  if(!dashboardContext) {
-    throw new Error("useDashboardContext must be used within a DashboardProvider");
+  if (!dashboardContext) {
+    throw new Error(
+      "useDashboardContext must be used within a DashboardProvider"
+    );
   }
-  const { tonConnected } = dashboardContext;
+  const { tonConnected, evmConnected, disbleEvm, disableTon } =
+    dashboardContext;
   const address = concatAddress(userFriendlyAddress);
+  const addressEVM = concatAddress(evmAddress || "");
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end z-50">
@@ -27,20 +32,27 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
           </h2>
         </span>
         <div className="flex justify-around">
-          <button 
-          onClick={connectEvmWallet}
-          className="flex items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200">
+          <button
+            disabled={disbleEvm}
+            onClick={connectEvmWallet}
+            className="flex items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200"
+          >
             <img
               src="https://pbs.twimg.com/profile_images/1805286722768343041/IeuGAwF3_400x400.jpg"
               alt="AssetChain"
               className="w-8 h-8 mr-4 rounded-full"
             />
-            <span className="font-bold">AssetChain</span>
+            {!evmConnected ? (
+              <span className="font-bold">AssetChain</span>
+            ) : (
+              <span className="font-bold">{evmAddress && addressEVM}</span>
+            )}
           </button>
 
           {!tonConnected ? (
             <div>
               <button
+                disabled={disableTon}
                 onClick={connectWallet}
                 className="flex items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200"
               >
