@@ -15,6 +15,7 @@ interface WalletAsset {
   interface Asset {
     walletAssets: WalletAsset[];
     toggleSendModal: any;
+    showBalance:boolean;
   }
 
   interface TransactionHistory {

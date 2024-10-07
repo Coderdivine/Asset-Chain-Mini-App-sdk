@@ -243,10 +243,16 @@ function Dashboard() {
           )}
         </div>
 
-        <AssetList
+        { tonConnected && <AssetList
           walletAssets={walletAssets}
           toggleSendModal={toggleSendModal}
-        />
+          showBalance={false}
+        />}
+        { evmConnected && <AssetList
+          walletAssets={walletAssets}
+          toggleSendModal={toggleSendModal}
+          showBalance={false}
+        />}
         <Transactions transactionHistory={transactionHistory} />
       </main>
     </div>

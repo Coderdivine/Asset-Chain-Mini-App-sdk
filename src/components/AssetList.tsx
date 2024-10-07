@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 
-function AssetList({ toggleSendModal, walletAssets }: Asset) {
+function AssetList({ toggleSendModal, walletAssets, showBalance }: Asset) {
   return (
     <div>
         <div className="p-6 bg-gray-100 rounded">
@@ -19,7 +19,7 @@ function AssetList({ toggleSendModal, walletAssets }: Asset) {
                 />
                 <div>
                   <p>
-                    {asset.balance} {asset.symbol}
+                    {showBalance ? asset.balance : ""} {asset.symbol}
                   </p>
                 </div>
               </div>
