@@ -28,7 +28,7 @@ export const useEvmWallet = () => {
     adapters: [new EthersAdapter()],
     networks:[mainnet, sepolia],
     metadata,
-    //@ts-ignore
+    //@ts-expect-error
     defaultNetwork,
     enableInjected: true,
     enableWalletConnect:true,
