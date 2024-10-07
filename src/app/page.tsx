@@ -1,9 +1,9 @@
-import Dashboard from "@/pages/Dashboard";
+import AppPage from "@/pages/App";
 
 export default function Home() {
   return (
     <div>
-      <Dashboard />
+       <AppPage />
     </div>
   );
 }

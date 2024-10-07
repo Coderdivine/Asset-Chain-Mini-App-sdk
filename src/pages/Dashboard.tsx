@@ -1,26 +1,71 @@
 "use client";
-import { useState } from "react";
+import AssetList from "@/components/AssetList";
+import Transactions from "@/components/Transactions";
+import ConnectButton from "@/components/WalletConnect";
+import { useTonWallet } from "@/hooks/useTonWallet";
+import { useState, useEffect, useContext } from "react";
+import { DashboardContext } from "./App";
+import { concatAddress } from "@/utils/concatAddress";
+import { onCopy } from "@/utils/onCopy";
 
 function Dashboard() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSendModalOpen, setIsSendModalOpen] = useState<boolean>(false);
+  const [walletConnected, setWalletConnected] = useState(false);
   const [recipientAddress, setRecipientAddress] = useState<string>("");
   const [sendAmount, setSendAmount] = useState<string>("");
   const [gasEstimate, setGasEstimate] = useState<string>("0.013 TON");
   const [pending, setPending] = useState<boolean>(false);
+  const dashboardContext = useContext(DashboardContext);
+  if (!dashboardContext) {
+    throw new Error(
+      "useDashboardContext must be used within a DashboardProvider"
+    );
+  }
+  const {
+    tonConnected,
+    setTonConnected,
+    evmConnected,
+    setEvmConnected,
+    selectedWallet,
+  } = dashboardContext;
+  const { disconnectWallet, sendTransaction, userFriendlyAddress } =
+    useTonWallet();
+
+  useEffect(() => {
+    if (tonConnected || evmConnected) {
+      setWalletConnected(true);
+    } else {
+      setWalletConnected(false);
+    }
+  }, [tonConnected, evmConnected, selectedWallet]);
+
+  const allowDisconnect = () => {
+    disconnectWallet();
+    setWalletConnected(false);
+  };
 
   const walletAssets: WalletAsset[] = [
     {
       id: 1,
-      image: "https://etherscan.io/token/images/rwa_32.png",
+      image: "https://pbs.twimg.com/profile_images/1833486393823096832/N39rUf-e_400x400.png",
       balance: "10",
-      symbol: "ETH",
+      symbol: "TON",
+    }
+  ];
+
+  const walletAssetsEVM: WalletAsset[] = [
+    {
+      id: 1,
+      image: "https://etherscan.io/token/images/rwa_32.png",
+      balance: "10,000",
+      symbol: "RWA",
     },
     {
       id: 2,
       image: "https://etherscan.io/token/images/tethernew_32.png",
-      balance: "25",
+      balance: "25,000",
       symbol: "USDT",
     },
     {
@@ -33,73 +78,68 @@ function Dashboard() {
   ];
 
   const transactionHistory: Transaction[] = [
-    { id: 1, amount: "0.5 ETH", date: "2024-10-05", txHash: "0x123...0xfe" },
+    { id: 1, amount: "50.00 RWA", date: "2024-10-05", txHash: "0x123...0xfe" },
     { id: 2, amount: "15 USDC", date: "2024-10-03", txHash: "0x456...0Bfe" },
   ];
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleSendModal = () => setIsSendModalOpen(!isSendModalOpen);
 
-  const handleSendTransaction = () => {
-    console.log(`Sending ${sendAmount} to ${recipientAddress}`);
-    // toggleSendModal();
-    setPending(!pending);
+  const handleSendTransaction = async () => {
+    try {
+      if (selectedWallet) {
+        if (tonConnected || evmConnected) {
+          if (selectedWallet.currency == "TON") {
+            const tx = await sendTransaction({
+              value: sendAmount,
+              to: recipientAddress,
+              payload: "",
+            });
+            if (tx) {
+              console.log({ tx });
+            }
+          }
+          if (selectedWallet.currency == "RWA") {
+            console.log("Development");
+          }
+        }
+      } else {
+        console.log("Connect a wallet first");
+      }
+      setPending(false);
+    } catch (error) {
+       console.log({ error });
+    }
   };
 
   const connectWallet = () => {
     setIsConnected(true);
     toggleModal();
-    setGasEstimate("0.14")
-  }
+    setGasEstimate("0.14" + "TON");
+  };
 
   return (
     <div className="min-h-screen bg-white text-gray-800 p-4">
       <header className="flex justify-between items-center mb-8">
         <div className="font-bold text-2xl">Asset Chain</div>
-        <button
-          onClick={connectWallet}
-          className="bg-gray-800 text-white px-4 py-2 rounded"
-        >
-          {isConnected ? "Connected" : "Connect"}
-        </button>
+        {!walletConnected ? (
+          <button
+            onClick={connectWallet}
+            className="bg-gray-800 text-white px-4 py-2 rounded"
+          >
+            {walletConnected ? "Connected" : "Connect"}
+          </button>
+        ) : (
+          <button
+            onClick={allowDisconnect}
+            className="bg-gray-800 text-white px-4 py-2 rounded"
+          >
+            Disconnect { selectedWallet && selectedWallet?.currency || ""}
+          </button>
+        )}
       </header>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end z-50">
-          <div className="bg-white p-6 w-full md:w-1/2 rounded-t-lg">
-            <span className="flex justify-between">
-              <h2 className="text-lg font-bold mb-4">Choose Wallet</h2>
-              <h2
-                onClick={toggleModal}
-                className="text-lg font-bold mb-4 text-gray-500 cursor-pointer"
-              >
-                X
-              </h2>
-            </span>
-            <div className="flex justify-around">
-              {/* First Button (AssetChain) */}
-              <button className="flex items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200">
-                <img
-                  src="https://pbs.twimg.com/profile_images/1805286722768343041/IeuGAwF3_400x400.jpg"
-                  alt="AssetChain"
-                  className="w-8 h-8 mr-4 rounded-full"
-                />
-                <span className="font-bold">AssetChain</span>
-              </button>
-
-              {/* Second Button (TON) */}
-              <button className="flex items-center bg-gray-100 p-4 rounded-lg hover:bg-gray-200">
-                <img
-                  src="https://pbs.twimg.com/profile_images/1833486393823096832/N39rUf-e_400x400.png"
-                  alt="TON"
-                  className="w-8 h-8 mr-4 rounded-full"
-                />
-                <span className="font-bold">TON</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {isModalOpen && <ConnectButton toggleModal={toggleModal} />}
 
       {isSendModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-end z-50">
@@ -139,7 +179,7 @@ function Dashboard() {
             </div>
             <div className="mb-4">
               <p className="text-sm">
-                Estimated Gas Fee: <strong>{gasEstimate}</strong>
+                {/* Estimated Gas Fee: <strong>{gasEstimate}</strong> */}
               </p>
             </div>
             <button
@@ -177,60 +217,19 @@ function Dashboard() {
           <p className="text-sm mt-2">
             Wallet asset, make transaction and view history
           </p>
-        </div>
-
-        <div className="p-6 bg-gray-100 rounded">
-          <h2 className="text-lg font-bold mb-4">Collected Wallet Assets</h2>
-          {walletAssets.map((asset) => (
-            <div
-              key={asset.id}
-              className="flex justify-between items-center mb-4"
-            >
-              <div className="flex items-center">
-                <img
-                  src={asset.image}
-                  alt={asset.symbol}
-                  className="w-8 h-8 mr-4 rounded-full"
-                />
-                <div>
-                  <p>
-                    {asset.balance} {asset.symbol}
-                  </p>
-                </div>
-              </div>
-              <div>
-                <button
-                  className="bg-gray-800 text-white px-4 py-2 rounded"
-                  onClick={toggleSendModal}
-                >
-                  Send Transaction
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        
-        <div className="p-6 bg-gray-100 rounded">
-          <h2 className="text-lg font-bold mb-4">Latest Transactions</h2>
-          {transactionHistory.map((tx) => (
-            <div key={tx.id} className="mb-4">
-              <p>
-                <strong>Amount:</strong> {tx.amount}
-              </p>
-              <p>
-                <strong>Date:</strong> {tx.date}
-              </p>
-              <p className="flex">
-                <strong>Hash: </strong> {tx.txHash}
-                <span>
+          {userFriendlyAddress && (
+            <p className="flex text-sm mt-2">
+              Wallet address:
+              <span className="flex text-sm ml-1 -mt-1 rounded-md p-1">
+                {concatAddress(userFriendlyAddress) || ""}
+                <span onClick={() => onCopy(userFriendlyAddress)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    className="size-4 mr-1 mt-1 cursor-pointer"
+                    className="size-4 ml-1 mr-1 cursor-pointer"
                   >
                     <path
                       stroke-linecap="round"
@@ -239,16 +238,16 @@ function Dashboard() {
                     />
                   </svg>
                 </span>
-              </p>
-              <hr className="border mt-2" />
-            </div>
-          ))}
+              </span>
+            </p>
+          )}
         </div>
 
-
-
-
-        
+        <AssetList
+          walletAssets={walletAssets}
+          toggleSendModal={toggleSendModal}
+        />
+        <Transactions transactionHistory={transactionHistory} />
       </main>
     </div>
   );
