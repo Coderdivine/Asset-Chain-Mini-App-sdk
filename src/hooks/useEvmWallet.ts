@@ -9,7 +9,7 @@ export const useEvmWallet = () => {
   const { address, chain, chainId, connector, isConnecting, status, isConnected } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
   const connections = getConnections(config);
-  const defaultConnector = metaMaskConfig;
+  const defaultConnector = walletConnectConfig;
   if (!dashboardContext) {
     throw new Error('useDashboardContext must be used within a DashboardProvider');
   }

@@ -19,7 +19,7 @@ const metamaskOptions: MetaMaskParameters = {
     enableAnalytics: true,
     extensionOnly: false,
     infuraAPIKey,
-    useDeeplink: false,
+    useDeeplink: true,
 }
 
 const coinBaseOptions: CoinbaseWalletParameters = {
