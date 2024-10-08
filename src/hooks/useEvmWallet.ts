@@ -80,7 +80,6 @@ export const useEvmWallet = () => {
     try {
        // chainId: mainnet.id,
       // connector: connections[0]?.connector,
-      if(evmConnected && selectedWallet){
         const result = await sendTransaction(config,{
           to: txParams.to,
           gas: parseGwei("20"),
@@ -90,7 +89,6 @@ export const useEvmWallet = () => {
           console.log({ sendTransactionEvm: result });
         }
         return result;
-      }
     } catch (error: any) {
       console.error({ error });
     }
