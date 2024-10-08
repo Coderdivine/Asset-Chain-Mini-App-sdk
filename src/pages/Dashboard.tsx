@@ -202,7 +202,7 @@ function Dashboard() {
             onClick={allowDisconnect}
             className="bg-gray-800 text-white px-4 py-2 rounded"
           >
-            Disconnect { (selectedWallet && selectedWallet?.currency == "RWA") ? "AssetChain" : selectedWallet?.currency || "" }
+            Disconnect { (selectedWallet && selectedWallet?.currency == "RWA") ? "Asset Chain" : selectedWallet?.currency || "" }
           </button>
         )}
       </header>
