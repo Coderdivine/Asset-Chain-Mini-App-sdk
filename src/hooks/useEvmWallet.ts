@@ -1,68 +1,103 @@
 import { useContext, useEffect, useState } from "react";
 import { DashboardContext } from "@/pages/App";
-import { NETWORKS } from '@/configs/networks';
-import { getAccount, connect, disconnect, sendTransaction, getConnections, reconnect, injected } from '@wagmi/core'
-import { parseEther, parseGwei } from 'viem'
-import { wagmiConfig as config, walletConnectConfig } from '../configs/wagmiConfig'
+import { NETWORKS } from "@/configs/networks";
+import {
+  getAccount,
+  connect,
+  disconnect,
+  sendTransaction,
+  reconnect,
+  injected,
+} from "@wagmi/core";
+import { parseEther, parseGwei } from "viem";
+import {
+  wagmiConfig as config,
+  walletConnectConfig,
+} from "../configs/wagmiConfig";
+//@ts-expect-error
+import { useSwitchChain } from "wagmi";
+import { AssetChainMainnet } from "@/configs/chains";
+import { logConsole } from "@/utils/logConsole";
 
 export const useEvmWallet = () => {
-  const { address, chain, chainId, connector, isConnecting, status, isConnected } = getAccount(config);
+  const {
+    address,
+    chain,
+    chainId,
+    connector,
+    isConnecting,
+    status,
+    isConnected,
+  } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
-  const connections = getConnections(config);
   const defaultConnector = walletConnectConfig;
+  const { switchChain } = useSwitchChain({ config });
   if (!dashboardContext) {
-    throw new Error('useDashboardContext must be used within a DashboardProvider');
+    throw new Error(
+      "useDashboardContext must be used within a DashboardProvider"
+    );
   }
-  const { evmConnected, setEvmConnected, setSelectedWallet, selectedWallet, setProcessing } = dashboardContext;
+  const {
+    evmConnected,
+    setEvmConnected,
+    setSelectedWallet,
+    selectedWallet,
+    setProcessing,
+  } = dashboardContext;
 
   useEffect(() => {
-    console.log({ evmState: status, address, connector, isConnecting, isConnected });
-    if(status == "connected"){
+    logConsole({
+      evmState: status,
+      address,
+      connector,
+      isConnecting,
+      isConnected,
+    });
+    if (status == "connected") {
       setEvmConnected(true);
       selectWallet("assetchain");
     }
-    if(status == "disconnected"){
+    if (status == "disconnected") {
       setEvmConnected(false);
       selectWallet("no_wallet");
     }
 
-    if(isConnected){
+    if (isConnected) {
       setEvmConnected(true);
       selectWallet("assetchain");
     }
   }, [status, isConnected]);
 
-
   const selectWallet = (wallet_: string) => {
     const wallet = wallet_.toLocaleLowerCase();
-    if(wallet == "assetchain"){
+    if (wallet == "assetchain") {
       setSelectedWallet(NETWORKS.assetchain_mainnet);
     }
-    if(wallet == "ton") {
+    if (wallet == "ton") {
       setSelectedWallet(NETWORKS.ton_mainnet);
     }
-    if(wallet == "no_wallet") {
+    if (wallet == "no_wallet") {
       setSelectedWallet();
     }
-  }
+  };
 
   const connectEvmWallet = async () => {
     setProcessing(true);
     try {
-     if(!isConnected) {
-      console.log("Connect EVM wallet");
-      const result = await connect(config, { connector: defaultConnector });
-      if(result){
-        console.log({ result });
-        setEvmConnected(true);
+      if (!isConnected) {
+        logConsole("Connect EVM wallet");
+        const result = await connect(config, { connector: defaultConnector });
+        if (result) {
+          logConsole({ result });
+          setEvmConnected(true);
+          selectWallet("assetchain");
+        }
+      } else {
+        logConsole("Wallet connected");
         selectWallet("assetchain");
-      } 
-     } else {
-      console.log("Wallet connected");
-      selectWallet("assetchain");
-     }
+      }
     } catch (error: any) {
-      console.log({ error });
+      logConsole({ error });
     }
     setProcessing(false);
   };
@@ -72,45 +107,51 @@ export const useEvmWallet = () => {
       await disconnect(config);
       setEvmConnected(false);
     } catch (error: any) {
-      console.log({ error });
+      logConsole({ error });
     }
   };
 
   const sendTransactionEvm = async (txParams: any) => {
     try {
-       // chainId: mainnet.id,
-      // connector: connections[0]?.connector,
-        const result = await sendTransaction(config,{
-          to: txParams.to,
-          gas: parseGwei("20"),
-          value: parseEther(txParams.value),
-        });
-        if(result) {
-          console.log({ sendTransactionEvm: result });
-        }
-        return result;
+      if (AssetChainMainnet.id !== chainId) {
+        logConsole("ChainId mismatch");
+        await switchChain({ chainId: AssetChainMainnet.id });
+        return;
+      }
+
+      const result = await sendTransaction(config, {
+        to: txParams.to,
+        gas: parseGwei("20"),
+        value: parseEther(txParams.value),
+      });
+      if (result) {
+        logConsole({ sendTransactionEvm: result });
+      }
+      return result;
     } catch (error: any) {
       console.error({ error });
-      console.log("Something went wrong");
+      logConsole("Something went wrong");
     }
   };
 
   const allowReconnect = async () => {
     try {
-      const result = await reconnect(config, { connectors: [ defaultConnector ] });
-      if(result){
-        console.log({ allowReconnect: result });
+      const result = await reconnect(config, {
+        connectors: [defaultConnector],
+      });
+      if (result) {
+        logConsole({ allowReconnect: result });
       }
     } catch (error: any) {
-      console.log({ allowReconnectError: error });
+      logConsole({ allowReconnectError: error });
     }
-  }
+  };
 
   useEffect(() => {
-    if(!isConnected) {
+    if (!isConnected) {
       allowReconnect();
     }
-  },[isConnected]);
+  }, [isConnected]);
 
   return {
     connectEvmWallet,
@@ -118,6 +159,6 @@ export const useEvmWallet = () => {
     sendTransactionEvm,
     evmAddress: address,
     isConnected,
-    isConnecting
+    isConnecting,
   };
 };

@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from "@/configs/networks";
 import TonWeb from "tonweb";
+import { logConsole } from "@/utils/logConsole";
 const tonWeb = new TonWeb();
 
 export const useTonWallet = () => {
@@ -22,7 +23,7 @@ export const useTonWallet = () => {
 
   const selectWallet = (wallet_: string) => {
     const wallet = wallet_.toLocaleLowerCase();
-    console.log({ wallet })
+    logConsole({ wallet })
     if(wallet == "assetchain"){
       setSelectedWallet(NETWORKS.assetchain_mainnet);
     }
@@ -36,7 +37,7 @@ export const useTonWallet = () => {
   }
 
   useEffect(() => {
-    console.log({ state });
+    logConsole({ state });
     if(state.closeReason == "action-cancelled") {
         setTonConnected(false);
     }
@@ -58,9 +59,9 @@ export const useTonWallet = () => {
     try {
       selectWallet("ton");
       await open();
-      console.log({ userFriendlyAddress, rawAddress });
+      logConsole({ userFriendlyAddress, rawAddress });
     } catch (error: any) {
-      console.log({ error });
+      logConsole({ error });
     }
     setProcessing(false);
   };
@@ -74,11 +75,11 @@ export const useTonWallet = () => {
         setTonConnected(false);
         setSelectedWallet();
     } else {
-        console.log({ message: "Connect wallet first" });
+        logConsole({ message: "Connect wallet first" });
         setTonConnected(false);
     }
     } catch (error: any) {
-      console.log({ error });
+      logConsole({ error });
     }
   };
 
@@ -86,7 +87,7 @@ export const useTonWallet = () => {
     try {
       txParams.from = userFriendlyAddress;
       const value = tonWeb.utils.toNano(txParams.value);
-      console.log({ value });
+      logConsole({ value });
       const tx = await tonConnectUI.sendTransaction({
         validUntil: Date.now() + 1000000,
         messages: [

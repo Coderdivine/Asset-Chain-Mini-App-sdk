@@ -11,6 +11,7 @@ import { useEvmWallet } from "@/hooks/useEvmWallet";
 import { NETWORKS } from "@/configs/networks";
 import { verifyAddress } from "@/utils/validateAddress";
 import { explorerLink } from "@/utils/explorerLink";
+import { logConsole } from "@/utils/logConsole";
 
 function Dashboard() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -55,7 +56,7 @@ function Dashboard() {
 
   const selectWallet = (wallet_: string) => {
     const wallet = wallet_.toLocaleLowerCase();
-    console.log({ wallet });
+    logConsole({ wallet });
     if (wallet == "assetchain") {
       setSelectedWallet(NETWORKS.assetchain_mainnet);
     }
@@ -140,7 +141,7 @@ function Dashboard() {
     try {
       setPending(true);
       const isBase64 = verifyAddress(recipientAddress).type
-      console.log({ isBase64 });
+      logConsole({ isBase64 });
       if (selectedWallet) {
         if (tonConnected || evmConnected) {
           if (selectedWallet.currency == "TON") {
@@ -151,7 +152,7 @@ function Dashboard() {
             });
 
             if (tx) {
-              console.log({ TON: tx });
+              logConsole({ TON: tx });
               toggleSendModal();
               setHash(tx.boc);
             }
@@ -164,18 +165,18 @@ function Dashboard() {
                 to: recipientAddress,
               });
               if (tx) {
-                console.log({ RWA: tx });
+                logConsole({ RWA: tx });
                 toggleSendModal();
                 setHash(tx);
               }
           }
         }
       } else {
-        console.log("Connect a wallet first");
+        logConsole("Connect a wallet first");
       }
       setPending(false);
     } catch (error) {
-      console.log({ error });
+      logConsole({ error });
       setPending(false);
     }
   };
