@@ -14,7 +14,7 @@ import {
   wagmiConfig as config,
   walletConnectConfig,
 } from "../configs/wagmiConfig";
-//@ts-expect-error
+//@ts-expect-error: Ignore wagmi's error
 import { useSwitchChain } from "wagmi";
 import { AssetChainMainnet } from "@/configs/chains";
 import { logConsole } from "@/utils/logConsole";
