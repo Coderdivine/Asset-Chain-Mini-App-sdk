@@ -18,7 +18,7 @@ export const useTonWallet = () => {
   if (!dashboardContext) {
     throw new Error('useDashboardContext must be used within a DashboardProvider');
   }
-  const { tonConnected, setTonConnected, setSelectedWallet } = dashboardContext;
+  const { tonConnected, setTonConnected, setSelectedWallet, setProcessing } = dashboardContext;
 
   const selectWallet = (wallet_: string) => {
     const wallet = wallet_.toLocaleLowerCase();
@@ -28,6 +28,10 @@ export const useTonWallet = () => {
     }
     if(wallet == "ton") {
       setSelectedWallet(NETWORKS.ton_mainnet);
+    }
+
+    if(wallet == "no_wallet") {
+      setSelectedWallet();
     }
   }
 
@@ -45,18 +49,20 @@ export const useTonWallet = () => {
     }
     if(state.closeReason == "action-cancelled" && !userFriendlyAddress.length) {
         setTonConnected(false);
+        selectWallet("no_wallet");
     }
   }, [state]);
 
   const connectWallet = async () => {
+    setProcessing(true);
     try {
       selectWallet("ton");
-      
       await open();
       console.log({ userFriendlyAddress, rawAddress });
     } catch (error: any) {
       console.log({ error });
     }
+    setProcessing(false);
   };
 
   const disconnectWallet = async () => {

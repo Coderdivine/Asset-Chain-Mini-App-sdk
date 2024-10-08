@@ -37,6 +37,8 @@ interface DashboardContextType {
   setDisableTon: (value: boolean) => void;
   disbleEvm: boolean;
   setDisableEvm: (value: boolean) => void;
+  processing: boolean;
+  setProcessing: (value: boolean) => void;
 }
 
 interface Network {

@@ -13,7 +13,7 @@ export const useEvmWallet = () => {
   if (!dashboardContext) {
     throw new Error('useDashboardContext must be used within a DashboardProvider');
   }
-  const { evmConnected, setEvmConnected, setSelectedWallet, selectedWallet } = dashboardContext;
+  const { evmConnected, setEvmConnected, setSelectedWallet, selectedWallet, setProcessing } = dashboardContext;
 
   useEffect(() => {
     console.log({ evmState: status, address, connector, isConnecting, isConnected });
@@ -47,6 +47,7 @@ export const useEvmWallet = () => {
   }
 
   const connectEvmWallet = async () => {
+    setProcessing(true);
     try {
      if(!isConnected) {
       console.log("Connect EVM wallet");
@@ -63,6 +64,7 @@ export const useEvmWallet = () => {
     } catch (error: any) {
       console.log({ error });
     }
+    setProcessing(false);
   };
 
   const disconnectEvmWallet = async () => {

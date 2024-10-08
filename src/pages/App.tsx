@@ -15,6 +15,8 @@ export const DashboardContext = createContext<DashboardContextType>({
   setDisableTon: () => {},
   disbleEvm: false,
   setDisableEvm: () => {},
+  processing: false,
+  setProcessing: () => {}
 });
 const manifestUrl = MANIFEST_URL;
 
@@ -24,6 +26,7 @@ function AppPage() {
   const [selectedWallet, setSelectedWallet] = useState<Network>();
   const [disableTon, setDisableTon] = useState(false);
   const [disbleEvm, setDisableEvm] = useState(false);
+  const [ processing, setProcessing ] = useState(false);
 
   return (
     <div>
@@ -41,6 +44,8 @@ function AppPage() {
               setDisableTon,
               disbleEvm,
               setDisableEvm,
+              processing,
+              setProcessing
             }}
           >
             <Dashboard />

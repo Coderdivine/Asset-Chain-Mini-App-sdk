@@ -14,7 +14,7 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
       "useDashboardContext must be used within a DashboardProvider"
     );
   }
-  const { tonConnected, evmConnected, disbleEvm, disableTon } =
+  const { tonConnected, evmConnected, disbleEvm, disableTon, processing } =
     dashboardContext;
   const address = concatAddress(userFriendlyAddress);
   const addressEVM = concatAddress(evmAddress || "");
@@ -44,7 +44,7 @@ const ConnectButton = ({ toggleModal }: ConnectButton) => {
               className="w-8 h-8 mr-4 rounded-full"
             />
             {!evmConnected ? (
-              <span className="font-bold">{ "AssetChain" }</span>
+              <span className="font-bold">{ processing ? "Connecting" : "Asset Chain" }</span>
             ) : (
               <span className="font-bold">{evmAddress && addressEVM}</span>
             )}

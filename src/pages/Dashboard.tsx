@@ -156,9 +156,8 @@ function Dashboard() {
               setHash(tx.boc);
             }
           }
-          setAddressFormat(`Wrong address format for ${selectedWallet.name}`);
+
           if (selectedWallet.currency == "RWA") {
-            if (isBase64 == selectedWallet.addressType) {
               setAddressFormat("");
               const tx = await sendTransactionEvm({
                 value: sendAmount,
@@ -169,8 +168,6 @@ function Dashboard() {
                 toggleSendModal();
                 setHash(tx);
               }
-            }
-            setAddressFormat(`Wrong address format for ${selectedWallet.name}`);
           }
         }
       } else {
@@ -205,7 +202,7 @@ function Dashboard() {
             onClick={allowDisconnect}
             className="bg-gray-800 text-white px-4 py-2 rounded"
           >
-            Disconnect {(selectedWallet && selectedWallet?.currency) || ""}
+            Disconnect { (selectedWallet && selectedWallet?.currency == "RWA") ? "AssetChain" : selectedWallet?.currency || "" }
           </button>
         )}
       </header>
@@ -282,7 +279,7 @@ function Dashboard() {
 
       <main className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="p-6 bg-gray-100 rounded">
-          <h1 className="text-lg font-bold">AssetChain Starter Kit</h1>
+          <h1 className="text-lg font-bold">Asset Chain Starter Kit</h1>
           <p className="text-sm mt-2">
             Wallet asset, make transaction and view history
           </p>
