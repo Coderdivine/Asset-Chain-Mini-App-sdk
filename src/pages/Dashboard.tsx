@@ -139,7 +139,7 @@ function Dashboard() {
   const handleSendTransaction = async () => {
     try {
       setPending(true);
-      const isBase64 = verifyAddress(recipientAddress).type;
+      const isBase64 = verifyAddress(recipientAddress).type
       console.log({ isBase64 });
       if (selectedWallet) {
         if (tonConnected || evmConnected) {
