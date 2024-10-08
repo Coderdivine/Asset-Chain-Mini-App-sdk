@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from '@/configs/networks';
-import { getAccount, connect, disconnect, sendTransaction, getConnections, reconnect } from '@wagmi/core'
+import { getAccount, connect, disconnect, sendTransaction, getConnections, reconnect, injected } from '@wagmi/core'
 import { parseEther, parseGwei } from 'viem'
-import { coinbaseConfig, wagmiConfig as config, metaMaskConfig, walletConnectConfig } from '../configs/wagmiConfig'
+import { wagmiConfig as config, walletConnectConfig } from '../configs/wagmiConfig'
 
 export const useEvmWallet = () => {
   const { address, chain, chainId, connector, isConnecting, status, isConnected } = getAccount(config);
@@ -91,6 +91,7 @@ export const useEvmWallet = () => {
         return result;
     } catch (error: any) {
       console.error({ error });
+      console.log("Something went wrong");
     }
   };
 
