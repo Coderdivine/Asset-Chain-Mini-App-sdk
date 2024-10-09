@@ -1,4 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+"use client";
+
+import { useContext, useEffect } from "react";
 import { DashboardContext } from "@/pages/App";
 import { NETWORKS } from "@/configs/networks";
 import {
@@ -31,7 +33,7 @@ export const useEvmWallet = () => {
   } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
   const defaultConnector = walletConnectConfig;
-  const { switchChain } = useSwitchChain({ config });
+  const switchChain = (chainId: any) => {};
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
@@ -44,6 +46,8 @@ export const useEvmWallet = () => {
     selectedWallet,
     setProcessing,
   } = dashboardContext;
+  // const { switchChain } = useSwitchChain({ config });
+
 
   useEffect(() => {
     logConsole({

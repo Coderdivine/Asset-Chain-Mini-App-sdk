@@ -1,4 +1,5 @@
-import React, { useContext, useState } from "react";
+"use client";
+import React, { useContext } from "react";
 import { useTonWallet } from "../hooks/useTonWallet";
 import { DashboardContext } from "@/pages/App";
 import { useEvmWallet } from "@/hooks/useEvmWallet";
@@ -7,7 +8,7 @@ import { concatAddress } from "@/utils/concatAddress";
 const ConnectButton = ({ toggleModal }: ConnectButton) => {
   const { connectWallet, disconnectWallet, userFriendlyAddress } =
     useTonWallet();
-  const { connectEvmWallet, evmAddress, isConnecting } = useEvmWallet();
+  const { connectEvmWallet, evmAddress } = useEvmWallet();
   const dashboardContext = useContext(DashboardContext);
   if (!dashboardContext) {
     throw new Error(
