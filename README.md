@@ -7,7 +7,7 @@ This starter kit provides a foundational setup for building a Telegram mini app 
 1. **Environment Variables**:  
    - Rename `.env.example` to `.env.local` and configure the following parameters:
      - `NEXT_PUBLIC_PROJECT_ID=""`: Add your project ID from [Reown](https://cloud.reown.com).
-     - `NEXT_PUBLIC_INFURA_KEY=""`: Add your Infura API key from [Infura](https://www.infura.com).
+     - `NEXT_PUBLIC_INFURA_KEY=""`: Add your Infura API key from [Infura](https://www.infura.io).
      - `NEXT_PUBLIC_MANIFEST_URL=""`: Add a manifest URL.  
        Example: `"https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json"`.
 
