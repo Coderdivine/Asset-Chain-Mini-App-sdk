@@ -1,28 +1,29 @@
 "use client";
 import { wagmiConfig } from "@/configs/wagmiConfig";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 //@ts-expect-error: Ignore wagmi's error
 import { WagmiProvider } from "wagmi";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      gcTime: 1_000 * 60 * 60 * 24,
-    },
-  },
-})
 
 export default function AppKit({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-  return <div>
-    <WagmiProvider config={wagmiConfig} reconnectOnMount={true} >
+  const queryClientOptions = new QueryClient({
+    defaultOptions: {
+      queries: {
+        gcTime: 1_000 * 60 * 60 * 24,
+      },
+    },
+  });
+
+  const [queryClient] = useState(() => queryClientOptions);
+  return (
+    <div>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <WagmiProvider config={wagmiConfig}>{children}</WagmiProvider>
       </QueryClientProvider>
-    </WagmiProvider>
-  </div>;
+    </div>
+  );
 }

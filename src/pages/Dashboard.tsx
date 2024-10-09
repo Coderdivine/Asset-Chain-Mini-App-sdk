@@ -12,6 +12,7 @@ import { NETWORKS } from "@/configs/networks";
 import { verifyAddress } from "@/utils/validateAddress";
 import { explorerLink } from "@/utils/explorerLink";
 import { logConsole } from "@/utils/logConsole";
+import AppKit from "@/context/magmiProvider";
 
 function Dashboard() {
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -188,6 +189,7 @@ function Dashboard() {
   };
 
   return (
+    <AppKit>
     <div className="min-h-screen bg-white text-gray-800 p-4">
       <header className="flex justify-between items-center mb-8">
         <div className="font-bold text-2xl">Asset Chain</div>
@@ -379,6 +381,7 @@ function Dashboard() {
         {/* <Transactions transactionHistory={transactionHistory} /> */}
       </main>
     </div>
+    </AppKit>
   );
 }
 
