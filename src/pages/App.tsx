@@ -68,7 +68,6 @@ export function AssetChainKit({
     projectId,
     infuraApiKey,
     metadata,
-    defaultConnector,
   });
 
   const onlyOneWallet = () => {

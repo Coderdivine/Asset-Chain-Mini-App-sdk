@@ -20,7 +20,7 @@ import { AssetChainMainnet } from "@/configs/chains";
 import { logConsole } from "@/utils/logConsole";
 import { metaMask, MetaMaskParameters, walletConnect, WalletConnectParameters } from "@wagmi/connectors";
 
-export const useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defaultConnect }: EVM) => {
+export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
   const metamaskOptions: MetaMaskParameters = {
     enableAnalytics: true,
     extensionOnly: false,
@@ -51,7 +51,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnect
     isConnected,
   } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
-  const defaultConnector =  defaultConnect || walletConnectConfig;
+  const defaultConnector = walletConnectConfig;
   const switchChain = (chainId: any) => {};
   if (!dashboardContext) {
     throw new Error(

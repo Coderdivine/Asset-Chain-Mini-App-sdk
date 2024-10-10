@@ -1,52 +1,3 @@
-"use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// src/index.ts
-var src_exports = {};
-__export(src_exports, {
-  AssetChainKit: () => AssetChainKit,
-  DashboardContext: () => DashboardContext,
-  INFURA_KEY: () => INFURA_KEY,
-  MANIFEST_URL: () => MANIFEST_URL,
-  PROJECT_ID: () => PROJECT_ID,
-  TonConnectUIProvider: () => import_ui_react2.TonConnectUIProvider,
-  concatAddress: () => concatAddress,
-  configs: () => configs,
-  explorerLink: () => explorerLink,
-  onCopy: () => onCopy,
-  sayHello: () => sayHello,
-  useEvmWallet: () => useEvmWallet,
-  useTonWallet: () => useTonWallet,
-  verifyAddress: () => verifyAddress
-});
-module.exports = __toCommonJS(src_exports);
-
 // src/configs/index.ts
 var INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY || "";
 var PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID || "";
@@ -58,7 +9,7 @@ var configs = {
 };
 
 // src/pages/App.tsx
-var import_react3 = require("react");
+import { createContext, useEffect as useEffect3, useState as useState2 } from "react";
 
 // src/utils/logConsole.tsx
 var debugMode = false;
@@ -108,16 +59,20 @@ var NETWORKS = {
 };
 
 // src/hooks/useTonWallet.ts
-var import_ui_react = require("@tonconnect/ui-react");
-var import_react = require("react");
-var import_tonweb = __toESM(require("tonweb"));
-var tonWeb = new import_tonweb.default();
+import {
+  useTonAddress,
+  useTonConnectModal,
+  useTonConnectUI
+} from "@tonconnect/ui-react";
+import { useContext, useEffect } from "react";
+import TonWeb from "tonweb";
+var tonWeb = new TonWeb();
 var useTonWallet = () => {
-  const { state, open, close } = (0, import_ui_react.useTonConnectModal)();
-  const [tonConnectUI] = (0, import_ui_react.useTonConnectUI)();
-  const userFriendlyAddress = (0, import_ui_react.useTonAddress)();
-  const rawAddress = (0, import_ui_react.useTonAddress)(false);
-  const dashboardContext = (0, import_react.useContext)(DashboardContext);
+  const { state, open, close } = useTonConnectModal();
+  const [tonConnectUI] = useTonConnectUI();
+  const userFriendlyAddress = useTonAddress();
+  const rawAddress = useTonAddress(false);
+  const dashboardContext = useContext(DashboardContext);
   if (!dashboardContext) {
     throw new Error("useDashboardContext must be used within a DashboardProvider");
   }
@@ -135,7 +90,7 @@ var useTonWallet = () => {
       setSelectedWallet();
     }
   };
-  (0, import_react.useEffect)(() => {
+  useEffect(() => {
     logConsole({ state });
     if (state.closeReason == "action-cancelled") {
       setTonConnected(false);
@@ -209,13 +164,19 @@ var useTonWallet = () => {
 };
 
 // src/hooks/useEvmWallet.ts
-var import_react2 = require("react");
-var import_core2 = require("@wagmi/core");
-var import_viem = require("viem");
+import { useContext as useContext2, useEffect as useEffect2 } from "react";
+import {
+  getAccount,
+  connect,
+  disconnect,
+  sendTransaction,
+  reconnect
+} from "@wagmi/core";
+import { parseEther, parseGwei } from "viem";
 
 // src/configs/wagmiConfig.ts
-var import_core = require("@wagmi/core");
-var import_connectors = require("@wagmi/connectors");
+import { http, createConfig, injected } from "@wagmi/core";
+import { coinbaseWallet } from "@wagmi/connectors";
 
 // src/configs/chains.ts
 var AssetChainMainnet = {
@@ -234,19 +195,19 @@ var AssetChainMainnet = {
 var coinBaseOptions = {
   appName: "Asset Chain Starter Kit"
 };
-var coinbaseConfig = (0, import_connectors.coinbaseWallet)(coinBaseOptions);
-var wagmiConfig = (0, import_core.createConfig)({
+var coinbaseConfig = coinbaseWallet(coinBaseOptions);
+var wagmiConfig = createConfig({
   chains: [AssetChainMainnet],
-  connectors: [coinbaseConfig, (0, import_core.injected)()],
+  connectors: [coinbaseConfig, injected()],
   ssr: true,
   transports: {
-    [AssetChainMainnet.id]: (0, import_core.http)()
+    [AssetChainMainnet.id]: http()
   }
 });
 
 // src/hooks/useEvmWallet.ts
-var import_connectors2 = require("@wagmi/connectors");
-var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defaultConnect }) => {
+import { metaMask, walletConnect } from "@wagmi/connectors";
+var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
   const metamaskOptions = {
     enableAnalytics: true,
     extensionOnly: false,
@@ -263,8 +224,8 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
       themeMode: "light"
     }
   };
-  const metaMaskConfig = (0, import_connectors2.metaMask)(metamaskOptions);
-  const walletConnectConfig = (0, import_connectors2.walletConnect)(walletConnectOptions);
+  const metaMaskConfig = metaMask(metamaskOptions);
+  const walletConnectConfig = walletConnect(walletConnectOptions);
   const {
     address,
     chain,
@@ -273,9 +234,9 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
     isConnecting,
     status,
     isConnected
-  } = (0, import_core2.getAccount)(wagmiConfig);
-  const dashboardContext = (0, import_react2.useContext)(DashboardContext);
-  const defaultConnector = defaultConnect || walletConnectConfig;
+  } = getAccount(wagmiConfig);
+  const dashboardContext = useContext2(DashboardContext);
+  const defaultConnector = walletConnectConfig;
   const switchChain = (chainId2) => {
   };
   if (!dashboardContext) {
@@ -290,7 +251,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
     selectedWallet,
     setProcessing
   } = dashboardContext;
-  (0, import_react2.useEffect)(() => {
+  useEffect2(() => {
     logConsole({
       evmState: status,
       address,
@@ -328,7 +289,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
     try {
       if (!isConnected) {
         logConsole("Connect EVM wallet");
-        const result = await (0, import_core2.connect)(wagmiConfig, { connector: defaultConnector });
+        const result = await connect(wagmiConfig, { connector: defaultConnector });
         if (result) {
           logConsole({ result });
           setEvmConnected(true);
@@ -345,7 +306,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
   };
   const disconnectEvmWallet = async () => {
     try {
-      await (0, import_core2.disconnect)(wagmiConfig);
+      await disconnect(wagmiConfig);
       setEvmConnected(false);
     } catch (error) {
       logConsole({ error });
@@ -358,10 +319,10 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
         await switchChain({ chainId: AssetChainMainnet.id });
         return;
       }
-      const result = await (0, import_core2.sendTransaction)(wagmiConfig, {
+      const result = await sendTransaction(wagmiConfig, {
         to: txParams.to,
-        gas: (0, import_viem.parseGwei)("20"),
-        value: (0, import_viem.parseEther)(txParams.value)
+        gas: parseGwei("20"),
+        value: parseEther(txParams.value)
       });
       if (result) {
         logConsole({ sendTransactionEvm: result });
@@ -374,7 +335,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
   };
   const allowReconnect = async () => {
     try {
-      const result = await (0, import_core2.reconnect)(wagmiConfig, {
+      const result = await reconnect(wagmiConfig, {
         connectors: [defaultConnector]
       });
       if (result) {
@@ -384,7 +345,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
       logConsole({ allowReconnectError: error });
     }
   };
-  (0, import_react2.useEffect)(() => {
+  useEffect2(() => {
     if (!isConnected) {
       allowReconnect();
     }
@@ -400,17 +361,17 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defau
 };
 
 // src/pages/App.tsx
-var import_react_query = require("@tanstack/react-query");
-var import_wagmi = require("wagmi");
-var import_jsx_runtime = require("react/jsx-runtime");
-var queryClientOptions = new import_react_query.QueryClient({
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider } from "wagmi";
+import { jsx } from "react/jsx-runtime";
+var queryClientOptions = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 1e3 * 60 * 60 * 24
     }
   }
 });
-var DashboardContext = (0, import_react3.createContext)({
+var DashboardContext = createContext({
   tonConnected: false,
   setTonConnected: () => {
   },
@@ -448,22 +409,21 @@ function AssetChainKit({
   metadata,
   defaultConnector
 }) {
-  const [tonConnected, setTonConnected] = (0, import_react3.useState)(false);
-  const [evmConnected, setEvmConnected] = (0, import_react3.useState)(false);
-  const [selectedWallet, setSelectedWallet] = (0, import_react3.useState)(
+  const [tonConnected, setTonConnected] = useState2(false);
+  const [evmConnected, setEvmConnected] = useState2(false);
+  const [selectedWallet, setSelectedWallet] = useState2(
     NETWORKS.assetchain_mainnet
   );
-  const [disableTon, setDisableTon] = (0, import_react3.useState)(false);
-  const [disableEvm, setDisableEvm] = (0, import_react3.useState)(false);
-  const [processing, setProcessing] = (0, import_react3.useState)(false);
-  const [isConnected, setIsConnected] = (0, import_react3.useState)(false);
-  const [walletConnected, setWalletConnected] = (0, import_react3.useState)(false);
+  const [disableTon, setDisableTon] = useState2(false);
+  const [disableEvm, setDisableEvm] = useState2(false);
+  const [processing, setProcessing] = useState2(false);
+  const [isConnected, setIsConnected] = useState2(false);
+  const [walletConnected, setWalletConnected] = useState2(false);
   const { disconnectWallet, sendTransaction: sendTransaction2 } = useTonWallet();
   const { disconnectEvmWallet, sendTransactionEvm } = useEvmWallet({
     projectId,
     infuraApiKey,
-    metadata,
-    defaultConnector
+    metadata
   });
   const onlyOneWallet = () => {
     if (tonConnected) {
@@ -483,10 +443,10 @@ function AssetChainKit({
       setSelectedWallet(NETWORKS.ton_mainnet);
     }
   };
-  (0, import_react3.useEffect)(() => {
+  useEffect3(() => {
     onlyOneWallet();
   }, [tonConnected, evmConnected]);
-  (0, import_react3.useEffect)(() => {
+  useEffect3(() => {
     if (tonConnected || evmConnected) {
       setWalletConnected(true);
       if (tonConnected) {
@@ -544,7 +504,7 @@ function AssetChainKit({
       logConsole({ error });
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_wagmi.WagmiProvider, { config: wagmiConfig, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(import_react_query.QueryClientProvider, { client: queryClientOptions, children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+  return /* @__PURE__ */ jsx(WagmiProvider, { config: wagmiConfig, children: /* @__PURE__ */ jsx(QueryClientProvider, { client: queryClientOptions, children: /* @__PURE__ */ jsx(
     DashboardContext.Provider,
     {
       value: {
@@ -616,9 +576,8 @@ var sayHello = async () => {
 };
 
 // src/index.ts
-var import_ui_react2 = require("@tonconnect/ui-react");
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
+import { TonConnectUIProvider } from "@tonconnect/ui-react";
+export {
   AssetChainKit,
   DashboardContext,
   INFURA_KEY,
@@ -633,4 +592,4 @@ var import_ui_react2 = require("@tonconnect/ui-react");
   useEvmWallet,
   useTonWallet,
   verifyAddress
-});
+};

@@ -5,14 +5,14 @@
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "module": "ESNext",                      // Changed to ESNext for modern module compatibility
-    "moduleResolution": "Bundler",           // Keep this for bundler resolution
+    "module": "ESNext",
+    "moduleResolution": "Bundler", 
     "target": "ES2022",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "outDir": "dist",                        // Output directory for compiled files
-    "noEmit": false,                         // Allow emitting compiled files
-    "jsx": "react-jsx",                      // Set to react-jsx for React 17+ JSX support
+    "outDir": "dist",  
+    "noEmit": false,
+    "jsx": "react-jsx",
     "plugins": [
       {
         "name": "next"

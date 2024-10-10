@@ -24,7 +24,7 @@ declare function AssetChainKit({ children, manifestUrl, projectId, infuraApiKey,
     defaultConnector?: CreateConnectorFn | undefined;
 }): react_jsx_runtime.JSX.Element;
 
-declare const useEvmWallet: ({ projectId, infuraApiKey, metadata, defaultConnector: defaultConnect }: EVM) => {
+declare const useEvmWallet: ({ projectId, infuraApiKey, metadata }: EVM) => {
     connectEvmWallet: () => Promise<void>;
     disconnectEvmWallet: () => Promise<void>;
     sendTransactionEvm: (txParams: any) => Promise<`0x${string}` | undefined>;

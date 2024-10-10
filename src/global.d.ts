@@ -66,7 +66,6 @@ interface EVM {
   projectId: string, 
   infuraApiKey: string, 
   metadata: any; 
-  defaultConnector: any | undefined;
 }
 
 declare module "wagmi" {
