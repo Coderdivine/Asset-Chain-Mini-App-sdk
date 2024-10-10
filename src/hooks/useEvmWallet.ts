@@ -8,20 +8,39 @@ import {
   connect,
   disconnect,
   sendTransaction,
-  reconnect,
-  injected,
+  reconnect
 } from "@wagmi/core";
 import { parseEther, parseGwei } from "viem";
 import {
   wagmiConfig as config,
-  walletConnectConfig,
 } from "../configs/wagmiConfig";
 //@ts-expect-error: Ignore wagmi's error
 import { useSwitchChain } from "wagmi";
 import { AssetChainMainnet } from "@/configs/chains";
 import { logConsole } from "@/utils/logConsole";
+import { metaMask, MetaMaskParameters, walletConnect, WalletConnectParameters } from "@wagmi/connectors";
 
-export const useEvmWallet = () => {
+export const useEvmWallet = ({ projectId, infuraApiKey, metadata, defaultConnector: defaultConnect }: EVM) => {
+  const metamaskOptions: MetaMaskParameters = {
+    enableAnalytics: true,
+    extensionOnly: false,
+    infuraAPIKey: infuraApiKey,
+    useDeeplink: true,
+  }
+  
+  const walletConnectOptions: WalletConnectParameters = {
+  projectId,
+  metadata,
+  isNewChainsStale: true,
+  disableProviderPing: false, 
+  customStoragePrefix: 'wagmi',
+  qrModalOptions: { 
+      themeMode: 'light', 
+  }, 
+  }
+  const metaMaskConfig = metaMask(metamaskOptions);
+  const walletConnectConfig = walletConnect(walletConnectOptions);
+
   const {
     address,
     chain,
@@ -32,7 +51,7 @@ export const useEvmWallet = () => {
     isConnected,
   } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
-  const defaultConnector = walletConnectConfig;
+  const defaultConnector =  defaultConnect || walletConnectConfig;
   const switchChain = (chainId: any) => {};
   if (!dashboardContext) {
     throw new Error(

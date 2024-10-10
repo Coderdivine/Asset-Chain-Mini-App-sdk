@@ -39,6 +39,12 @@ interface DashboardContextType {
   setDisableEvm: (value: boolean) => void;
   processing: boolean;
   setProcessing: (value: boolean) => void;
+  isConnected: boolean;
+  setIsConnected: (value: boolean) => void;
+  walletConnected: boolean;
+  setWalletConnected: (value: boolean) => void;
+  handleSendTransaction: (amount: string, to: string ) => void;
+  allowDisconnect: () => void;
 }
 
 interface Network {
@@ -54,7 +60,14 @@ interface Network {
 
 type Networks = {
   [key: string]: Network | Partial<Network>;
-};
+}
+
+interface EVM {
+  projectId: string, 
+  infuraApiKey: string, 
+  metadata: any; 
+  defaultConnector: any | undefined;
+}
 
 declare module "wagmi" {
   interface Register {
