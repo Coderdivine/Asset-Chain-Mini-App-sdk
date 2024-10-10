@@ -1,3 +1,7 @@
+import React from "react";
+// @ts-expect-error: Ignore wagmi's error
+import { CreateConnectorFn } from "wagmi";
+
 interface WalletAsset {
   id: number;
   image: string;
@@ -57,10 +61,6 @@ interface Network {
   explorerUrl: string;
   rpcUrl: string;
 }
-
-// type Networks = {
-//   [key: string]: Network | Partial<Network>;
-// }
 
 interface EVM {
   projectId: string, 

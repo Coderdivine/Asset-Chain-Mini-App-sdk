@@ -35,7 +35,7 @@ interface DashboardContextType {
   setSelectedWallet: any;
   disableTon: boolean;
   setDisableTon: (value: boolean) => void;
-  disbleEvm: boolean;
+  disableEvm: boolean;
   setDisableEvm: (value: boolean) => void;
   processing: boolean;
   setProcessing: (value: boolean) => void;
@@ -72,5 +72,11 @@ interface EVM {
 declare module "wagmi" {
   interface Register {
     config: typeof config;
+  }
+}
+
+declare namespace React {
+  namespace JSX {
+    interface Element extends React.ReactElement<any, any> { }
   }
 }

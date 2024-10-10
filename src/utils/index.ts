@@ -3,7 +3,7 @@ import { explorerLink } from "./explorerLink";
 import { onCopy } from "./onCopy";
 import { verifyAddress } from "./validateAddress";
 
-export default {
+export {
     concatAddress,
     explorerLink,
     onCopy,

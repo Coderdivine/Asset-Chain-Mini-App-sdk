@@ -1,16 +1,13 @@
-"use client";
-import React, { createContext, useEffect, useState } from "react";
-import AppKit from "@/context/provider";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import { logConsole } from "@/utils/logConsole";
 import { NETWORKS } from "@/configs/networks";
 import { useTonWallet } from "@/hooks/useTonWallet";
 import { useEvmWallet } from "@/hooks/useEvmWallet";
-import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import { CreateConnectorFn } from "@wagmi/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // @ts-expect-error: Ignore wagmi's error
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/configs/wagmiConfig";
+import { CreateConnectorFn } from "@wagmi/core";
 
 const queryClientOptions = new QueryClient({
   defaultOptions: {
@@ -29,7 +26,7 @@ export const DashboardContext = createContext<DashboardContextType>({
   setSelectedWallet: () => {},
   disableTon: false,
   setDisableTon: () => {},
-  disbleEvm: false,
+  disableEvm: false,
   setDisableEvm: () => {},
   processing: false,
   setProcessing: () => {},
@@ -41,28 +38,28 @@ export const DashboardContext = createContext<DashboardContextType>({
   allowDisconnect: () => {},
 });
 
-function AssetChainKit({
+export function AssetChainKit({
   children,
   manifestUrl,
   projectId,
   infuraApiKey,
   metadata,
   defaultConnector,
-}: Readonly<{
-  children: React.ReactNode;
-  manifestUrl: string;
+}:{
+  children: ReactNode;
+  manifestUrl?: string;
   projectId: string;
   infuraApiKey: string;
   metadata: any;
-  defaultConnector: CreateConnectorFn | undefined;
-}>) {
+  defaultConnector?: CreateConnectorFn | undefined;
+}) {
   const [tonConnected, setTonConnected] = useState(false);
   const [evmConnected, setEvmConnected] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<any>(
     NETWORKS.assetchain_mainnet
   );
   const [disableTon, setDisableTon] = useState(false);
-  const [disbleEvm, setDisableEvm] = useState(false);
+  const [disableEvm, setDisableEvm] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
@@ -167,10 +164,7 @@ function AssetChainKit({
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClientOptions}>
-      <TonConnectUIProvider 
-      manifestUrl={manifestUrl}
-      children={children}>
-        <DashboardContext.Provider
+          <DashboardContext.Provider
             value={{
               tonConnected,
               setTonConnected,
@@ -180,7 +174,7 @@ function AssetChainKit({
               setSelectedWallet,
               disableTon,
               setDisableTon,
-              disbleEvm,
+              disableEvm,
               setDisableEvm,
               processing,
               setProcessing,
@@ -194,10 +188,7 @@ function AssetChainKit({
           >
             {children}
           </DashboardContext.Provider>
-        </TonConnectUIProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
 }
-
-export default AssetChainKit;

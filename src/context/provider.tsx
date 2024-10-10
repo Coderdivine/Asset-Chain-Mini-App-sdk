@@ -12,7 +12,7 @@ const queryClientOptions = new QueryClient({
   },
 });
 
-export default function AssetChainKit({
+export function AppKit({
   children,
 }: {
   children: React.ReactNode;
