@@ -532,6 +532,16 @@ function AssetChainKit({
   ) }) });
 }
 
+// src/hooks/index.ts
+import { useContext as useContext3 } from "react";
+var useAssetChainConnect = () => {
+  const context = useContext3(DashboardContext);
+  if (!context) {
+    throw new Error("useAssetChainConnect must be used within AssetChainKit");
+  }
+  return context;
+};
+
 // src/utils/concatAddress.ts
 var concatAddress = (address) => {
   return address.length ? address.substring(0, 4).concat("...").concat(address.substring(address.length - 4, address.length)) : "";
@@ -589,6 +599,7 @@ export {
   explorerLink,
   onCopy,
   sayHello,
+  useAssetChainConnect,
   useEvmWallet,
   useTonWallet,
   verifyAddress

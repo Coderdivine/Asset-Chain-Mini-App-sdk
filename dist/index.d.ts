@@ -1,9 +1,9 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import React, { ReactNode } from 'react';
 import { CreateConnectorFn } from '@wagmi/core';
+export { TonConnectUIProvider } from '@tonconnect/ui-react';
 import * as _tonconnect_ui from '@tonconnect/ui';
 import * as _tonconnect_sdk from '@tonconnect/sdk';
-export { TonConnectUIProvider } from '@tonconnect/ui-react';
 
 declare const INFURA_KEY: string;
 declare const PROJECT_ID: string;
@@ -42,6 +42,8 @@ declare const useTonWallet: () => {
     state: _tonconnect_ui.WalletsModalState;
 };
 
+declare const useAssetChainConnect: () => DashboardContextType;
+
 declare const concatAddress: (address: string) => string;
 
 declare function explorerLink(network: Network, hash: string): {
@@ -60,4 +62,4 @@ declare function verifyAddress(address: string): AddressResult;
 
 declare const sayHello: () => Promise<string>;
 
-export { AssetChainKit, DashboardContext, INFURA_KEY, MANIFEST_URL, PROJECT_ID, concatAddress, configs, explorerLink, onCopy, sayHello, useEvmWallet, useTonWallet, verifyAddress };
+export { AssetChainKit, DashboardContext, INFURA_KEY, MANIFEST_URL, PROJECT_ID, concatAddress, configs, explorerLink, onCopy, sayHello, useAssetChainConnect, useEvmWallet, useTonWallet, verifyAddress };
