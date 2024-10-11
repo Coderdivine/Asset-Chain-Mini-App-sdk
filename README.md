@@ -1,7 +1,3 @@
-Let's break down the example code step-by-step, batch by batch, with explanations:
-
----
-
 ### 1. **Imports and Initial Setup**
 
 ```tsx
@@ -22,6 +18,8 @@ import {
 - **`"use client";`**: Marks this component to be client-side, meaning it will run in the browser rather than on the server.
 - **React and Hooks**: We're using `useState` for managing local state in the React component.
 - **Configs**: `INFURA_KEY` and `PROJECT_ID` are imported from a configuration file (`@/configs`), used for connecting to blockchain networks.
+ - `PROJECT_ID`: Add your project ID from [Reown](https://cloud.reown.com).
+ - `INFURA_KEY`: Add your Infura API key from [Infura](https://www.infura.io).
 - **Imports from `assetchain-connect-test`**: 
   - `AssetChainKit`: A wrapper component that facilitates blockchain wallet connections.
   - `concatAddress`: A utility function to shorten wallet addresses.
