@@ -3,6 +3,12 @@
 This starter kit provides a foundational setup for building a Telegram mini app integrated with blockchain wallets like MetaMask, Coinbase Wallet, and WalletConnect. It uses Next.js, wagmi for 
 Asset Chain wallet connections, and various injected providers for ease of use.
 
+## Table of content
+- [Getting Started](https://github.com/xendfinance/assetchain-telegram-app-starter-kit#getting-started)
+- [Contributing](https://github.com/xendfinance/assetchain-telegram-app-starter-kit#contributing)
+- [License](https://github.com/xendfinance/assetchain-telegram-app-starter-kit#license)
+- [Support](https://github.com/xendfinance/assetchain-telegram-app-starter-kit#support)
+
 ## Contributing
 
 See [CONTRIBUTING.md](https://github.com/xendfinance/assetchain-telegram-app-starter-kit/CONTRIBUTING.md) for contribution and pull request protocol. We expect contributors to follow our guide when submitting code or comments.
