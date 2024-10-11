@@ -1,6 +1,7 @@
 # Asset Chain Telegram App Starter Kit
 
-This is a starterkit to easily start building telegram mini apps on Asset Chain.
+This starter kit provides a foundational setup for building a Telegram mini app integrated with blockchain wallets like MetaMask, Coinbase Wallet, and WalletConnect. It uses Next.js, wagmi for 
+Asset Chain wallet connections, and various injected providers for ease of use.
 
 ## Contributing
 
