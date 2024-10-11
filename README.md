@@ -1,3 +1,7 @@
+# Asset Chain Telegram App Starter Kit
+
+This is a starterkit to easily start building telegram mini apps on Asset Chain.
+
 ### 1. **Imports and Initial Setup**
 
 ```tsx
