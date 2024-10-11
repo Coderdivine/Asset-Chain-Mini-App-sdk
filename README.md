@@ -5,7 +5,7 @@ Asset Chain wallet connections, and various injected providers for ease of use.
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/xendfinance/nodesale/CONTRIBUTING.md) for contribution and pull request protocol. We expect contributors to follow our guide when submitting code or comments.
+See [CONTRIBUTING.md](https://github.com/xendfinance/assetchain-telegram-app-starter-kit/CONTRIBUTING.md) for contribution and pull request protocol. We expect contributors to follow our guide when submitting code or comments.
 
 ## License
 
