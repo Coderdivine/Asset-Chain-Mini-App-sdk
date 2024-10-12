@@ -8,14 +8,13 @@ import {
   connect,
   disconnect,
   sendTransaction,
-  reconnect
+  reconnect,
+  switchChain,
 } from "@wagmi/core";
 import { parseEther, parseGwei } from "viem";
 import {
   wagmiConfig as config,
 } from "../configs/wagmiConfig";
-//@ts-expect-error: Ignore wagmi's error
-import { useSwitchChain } from "wagmi";
 import { AssetChainMainnet } from "@/configs/chains";
 import { logConsole } from "@/utils/logConsole";
 import { metaMask, MetaMaskParameters, walletConnect, WalletConnectParameters } from "@wagmi/connectors";
@@ -52,7 +51,6 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
   } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
   const defaultConnector = walletConnectConfig;
-  const switchChain = (chainId: any) => {};
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
@@ -65,8 +63,6 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
     selectedWallet,
     setProcessing,
   } = dashboardContext;
-  // const { switchChain } = useSwitchChain({ config });
-
 
   useEffect(() => {
     logConsole({
@@ -109,7 +105,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
     try {
       if (!isConnected) {
         logConsole("Connect EVM wallet");
-        const result = await connect(config, { connector: defaultConnector });
+        const result = await connect(config, { connector: defaultConnector, chainId: AssetChainMainnet.id });
         if (result) {
           logConsole({ result });
           setEvmConnected(true);
@@ -138,7 +134,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
     try {
       if (AssetChainMainnet.id !== chainId) {
         logConsole("ChainId mismatch");
-        await switchChain({ chainId: AssetChainMainnet.id });
+        await switchChain(config, { chainId: AssetChainMainnet.id });
         return;
       }
 

@@ -39,7 +39,7 @@ import {
   useAssetChainConnect,
   useEvmWallet,
   useTonWallet,
-} from "assetchain-connect-test";
+} from "assetchain-telegram-app-starter-kit";
 ```
 
 #### Explanation:
@@ -48,7 +48,7 @@ import {
 - **Configs**: `INFURA_KEY` and `PROJECT_ID` are imported from a configuration file (`@/configs`), used for connecting to blockchain networks.
  - `PROJECT_ID`: Add your project ID from [Reown](https://cloud.reown.com).
  - `INFURA_KEY`: Add your Infura API key from [Infura](https://www.infura.io).
-- **Imports from `assetchain-connect-test`**: 
+- **Imports from `assetchain-telegram-app-starter-kit`**: 
   - `AssetChainKit`: A wrapper component that facilitates blockchain wallet connections.
   - `concatAddress`: A utility function to shorten wallet addresses.
   - `onCopy`: A utility function to copy addresses to the clipboard.
