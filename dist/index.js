@@ -1,3 +1,27 @@
+// src/configs/chains.ts
+var AssetChainMainnet = {
+  id: 42420,
+  name: "Asset Chain Mainnet",
+  nativeCurrency: { name: "assetchain", symbol: "RWA", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["https://mainnet-rpc.assetchain.org"] }
+  },
+  blockExplorers: {
+    default: { name: "assetchain", url: "https://scan.assetchain.org" }
+  }
+};
+var AssetChainTestnet = {
+  id: 42421,
+  name: "Asset Chain Testnet",
+  nativeCurrency: { name: "assetchain", symbol: "RWA", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["https://testnet-rpc.assetchain.org"] }
+  },
+  blockExplorers: {
+    default: { name: "assetchain", url: "https://testnet-scan.assetchain.org" }
+  }
+};
+
 // src/configs/networks.ts
 var NETWORKS = {
   "assetchain_mainnet": {
@@ -45,8 +69,8 @@ var configs = {
   PROJECT_ID,
   MANIFEST_URL,
   NETWORKS,
-  AssetChainMainnet: NETWORKS.assetchain_mainnet,
-  AssetChainTestnet: NETWORKS.assetchain_testnet
+  AssetChainMainnet,
+  AssetChainTestnet
 };
 
 // src/pages/App.tsx
@@ -181,21 +205,6 @@ import { parseEther, parseGwei } from "viem";
 // src/configs/wagmiConfig.ts
 import { http, createConfig, injected } from "@wagmi/core";
 import { coinbaseWallet } from "@wagmi/connectors";
-
-// src/configs/chains.ts
-var AssetChainMainnet = {
-  id: 42420,
-  name: "Asset Chain Mainnet",
-  nativeCurrency: { name: "assetchain", symbol: "RWA", decimals: 18 },
-  rpcUrls: {
-    default: { http: ["https://mainnet-rpc.assetchain.org"] }
-  },
-  blockExplorers: {
-    default: { name: "assetchain", url: "https://scan.assetchain.org" }
-  }
-};
-
-// src/configs/wagmiConfig.ts
 var coinBaseOptions = {
   appName: "Asset Chain Starter Kit"
 };
@@ -211,7 +220,7 @@ var wagmiConfig = createConfig({
 
 // src/hooks/useEvmWallet.ts
 import { metaMask, walletConnect } from "@wagmi/connectors";
-var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
+var useEvmWallet = ({ projectId, infuraApiKey, metadata, network }) => {
   const metamaskOptions = {
     enableAnalytics: true,
     extensionOnly: false,
@@ -241,6 +250,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
   } = getAccount(wagmiConfig);
   const dashboardContext = useContext2(DashboardContext);
   const defaultConnector = walletConnectConfig;
+  const defaultChainId = AssetChainMainnet.id;
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
@@ -291,7 +301,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
     try {
       if (!isConnected) {
         logConsole("Connect EVM wallet");
-        const result = await connect(wagmiConfig, { connector: defaultConnector, chainId: AssetChainMainnet.id });
+        const result = await connect(wagmiConfig, { connector: defaultConnector, chainId: defaultChainId });
         if (result) {
           logConsole({ result });
           setEvmConnected(true);
@@ -316,9 +326,9 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
   };
   const sendTransactionEvm = async (txParams) => {
     try {
-      if (AssetChainMainnet.id !== chainId) {
+      if (defaultChainId !== chainId) {
         logConsole("ChainId mismatch");
-        await switchChain(wagmiConfig, { chainId: AssetChainMainnet.id });
+        await switchChain(wagmiConfig, { chainId: defaultChainId });
         return;
       }
       const result = await sendTransaction(wagmiConfig, {
@@ -409,7 +419,8 @@ function AssetChainKit({
   projectId,
   infuraApiKey,
   metadata,
-  defaultConnector
+  defaultConnector,
+  network
 }) {
   const [tonConnected, setTonConnected] = useState2(false);
   const [evmConnected, setEvmConnected] = useState2(false);
@@ -425,7 +436,8 @@ function AssetChainKit({
   const { disconnectEvmWallet, sendTransactionEvm } = useEvmWallet({
     projectId,
     infuraApiKey,
-    metadata
+    metadata,
+    network
   });
   const onlyOneWallet = () => {
     if (tonConnected) {
@@ -591,6 +603,8 @@ var sayHello = async () => {
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 export {
   AssetChainKit,
+  AssetChainMainnet,
+  AssetChainTestnet,
   DashboardContext,
   INFURA_KEY,
   MANIFEST_URL,

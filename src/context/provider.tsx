@@ -1,6 +1,5 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// @ts-expect-error: Ignore wagmi's error
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/configs/wagmiConfig";
 

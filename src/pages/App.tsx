@@ -9,7 +9,6 @@ import { wagmiConfig } from "@/configs/wagmiConfig";
 import { CreateConnectorFn } from "@wagmi/core";
 import { Chain } from "viem";
 import { DashboardContextType } from "@/global";
-
 const queryClientOptions = new QueryClient({
   defaultOptions: {
     queries: {

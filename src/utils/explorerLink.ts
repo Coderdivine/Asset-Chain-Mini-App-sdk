@@ -1,3 +1,4 @@
+import { Network } from "@/global";
 import { concatAddress } from "./concatAddress";
 
 export function explorerLink(network: Network, hash: string) {

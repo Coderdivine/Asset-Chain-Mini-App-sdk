@@ -4,4 +4,5 @@ export * from './hooks';
 export * from './utils';
 export * from './test';
 export { TonConnectUIProvider } from '@tonconnect/ui-react';
+// export * from './configs/chains';
 

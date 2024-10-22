@@ -28,7 +28,37 @@ interface ConnectButton {
   toggleModal: () => void;
 }
 
-interface DashboardContextType {
+
+
+export interface Network {
+  name: string;
+  addressType: string;
+  chainId: number;
+  id: string;
+  chainNamespace: string;
+  currency: string;
+  explorerUrl: string;
+  rpcUrl: string;
+}
+
+type Networks = {
+  [key: string]: Network | Partial<Network>;
+}
+
+export interface EVM {
+  projectId: string, 
+  infuraApiKey: string, 
+  metadata: any; 
+  network: Chain;
+}
+
+declare module "wagmi" {
+  interface Register {
+    config: typeof config;
+  }
+}
+
+export interface DashboardContextType {
   tonConnected: boolean;
   setTonConnected: (value: boolean) => void;
   evmConnected: boolean;
@@ -47,34 +77,6 @@ interface DashboardContextType {
   setWalletConnected: (value: boolean) => void;
   handleSendTransaction: (amount: string, to: string ) => void;
   allowDisconnect: () => void;
-}
-
-interface Network {
-  name: string;
-  addressType: string;
-  chainId: number;
-  id: string;
-  chainNamespace: string;
-  currency: string;
-  explorerUrl: string;
-  rpcUrl: string;
-}
-
-type Networks = {
-  [key: string]: Network | Partial<Network>;
-}
-
-interface EVM {
-  projectId: string, 
-  infuraApiKey: string, 
-  metadata: any; 
-  network: Chain;
-}
-
-declare module "wagmi" {
-  interface Register {
-    config: typeof config;
-  }
 }
 
 declare namespace React {
