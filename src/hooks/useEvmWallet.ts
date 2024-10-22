@@ -53,7 +53,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata, network }: EVM
   } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
   const defaultConnector = walletConnectConfig;
-  const defaultChainId = AssetChainMainnet.id
+  const defaultChainId = network.id == 42420 ? AssetChainMainnet.id: AssetChainTestnet.id;
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
