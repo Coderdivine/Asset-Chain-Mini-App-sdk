@@ -210,11 +210,12 @@ var coinBaseOptions = {
 };
 var coinbaseConfig = coinbaseWallet(coinBaseOptions);
 var wagmiConfig = createConfig({
-  chains: [AssetChainMainnet],
+  chains: [AssetChainMainnet, AssetChainTestnet],
   connectors: [coinbaseConfig, injected()],
   ssr: true,
   transports: {
-    [AssetChainMainnet.id]: http()
+    [AssetChainMainnet.id]: http(),
+    [AssetChainTestnet.id]: http()
   }
 });
 
@@ -250,7 +251,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata, network }) => {
   } = getAccount(wagmiConfig);
   const dashboardContext = useContext2(DashboardContext);
   const defaultConnector = walletConnectConfig;
-  const defaultChainId = AssetChainMainnet.id;
+  const defaultChainId = network.id == 42420 ? AssetChainMainnet.id : AssetChainTestnet.id;
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
@@ -603,8 +604,6 @@ var sayHello = async () => {
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
 export {
   AssetChainKit,
-  AssetChainMainnet,
-  AssetChainTestnet,
   DashboardContext,
   INFURA_KEY,
   MANIFEST_URL,

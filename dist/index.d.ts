@@ -6,47 +6,6 @@ export { TonConnectUIProvider } from '@tonconnect/ui-react';
 import * as _tonconnect_ui from '@tonconnect/ui';
 import * as _tonconnect_sdk from '@tonconnect/sdk';
 
-declare const AssetChainMainnet: {
-    readonly id: 42420;
-    readonly name: "Asset Chain Mainnet";
-    readonly nativeCurrency: {
-        readonly name: "assetchain";
-        readonly symbol: "RWA";
-        readonly decimals: 18;
-    };
-    readonly rpcUrls: {
-        readonly default: {
-            readonly http: readonly ["https://mainnet-rpc.assetchain.org"];
-        };
-    };
-    readonly blockExplorers: {
-        readonly default: {
-            readonly name: "assetchain";
-            readonly url: "https://scan.assetchain.org";
-        };
-    };
-};
-declare const AssetChainTestnet: {
-    readonly id: 42421;
-    readonly name: "Asset Chain Testnet";
-    readonly nativeCurrency: {
-        readonly name: "assetchain";
-        readonly symbol: "RWA";
-        readonly decimals: 18;
-    };
-    readonly rpcUrls: {
-        readonly default: {
-            readonly http: readonly ["https://testnet-rpc.assetchain.org"];
-        };
-    };
-    readonly blockExplorers: {
-        readonly default: {
-            readonly name: "assetchain";
-            readonly url: "https://testnet-scan.assetchain.org";
-        };
-    };
-};
-
 declare const INFURA_KEY: string;
 declare const PROJECT_ID: string;
 declare const MANIFEST_URL: string;
@@ -226,4 +185,4 @@ declare function verifyAddress(address: string): AddressResult;
 
 declare const sayHello: () => Promise<string>;
 
-export { AssetChainKit, AssetChainMainnet, AssetChainTestnet, DashboardContext, INFURA_KEY, MANIFEST_URL, PROJECT_ID, concatAddress, configs, explorerLink, onCopy, sayHello, useAssetChainConnect, useEvmWallet, useTonWallet, verifyAddress };
+export { AssetChainKit, DashboardContext, INFURA_KEY, MANIFEST_URL, PROJECT_ID, concatAddress, configs, explorerLink, onCopy, sayHello, useAssetChainConnect, useEvmWallet, useTonWallet, verifyAddress };
