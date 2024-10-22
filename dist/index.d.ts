@@ -12,6 +12,58 @@ declare const configs: {
     INFURA_KEY: string;
     PROJECT_ID: string;
     MANIFEST_URL: string;
+    NETWORKS: {
+        assetchain_mainnet: {
+            name: string;
+            addressType: string;
+            chainId: number;
+            currency: string;
+            explorerUrl: string;
+            rpcUrl: string;
+        };
+        assetchain_testnet: {
+            name: string;
+            addressType: string;
+            chainId: number;
+            currency: string;
+            explorerUrl: string;
+            rpcUrl: string;
+        };
+        ton_mainnet: {
+            name: string;
+            addressType: string;
+            chainId: number;
+            currency: string;
+            explorerUrl: string;
+            rpcUrl: string;
+        };
+        eth: {
+            id: string;
+            chainNamespace: string;
+            name: string;
+            addressType: string;
+            chainId: number;
+            currency: string;
+            explorerUrl: string;
+            rpcUrl: string;
+        };
+    };
+    AssetChainMainnet: {
+        name: string;
+        addressType: string;
+        chainId: number;
+        currency: string;
+        explorerUrl: string;
+        rpcUrl: string;
+    };
+    AssetChainTestnet: {
+        name: string;
+        addressType: string;
+        chainId: number;
+        currency: string;
+        explorerUrl: string;
+        rpcUrl: string;
+    };
 };
 
 declare const DashboardContext: React.Context<DashboardContextType>;

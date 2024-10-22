@@ -15,11 +15,12 @@ import { parseEther, parseGwei } from "viem";
 import {
   wagmiConfig as config,
 } from "../configs/wagmiConfig";
-import { AssetChainMainnet } from "@/configs/chains";
+import { AssetChainMainnet, AssetChainTestnet } from "@/configs/chains";
 import { logConsole } from "@/utils/logConsole";
 import { metaMask, MetaMaskParameters, walletConnect, WalletConnectParameters } from "@wagmi/connectors";
+import { EVM } from "@/global";
 
-export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
+export const useEvmWallet = ({ projectId, infuraApiKey, metadata, network }: EVM) => {
   const metamaskOptions: MetaMaskParameters = {
     enableAnalytics: true,
     extensionOnly: false,
@@ -37,6 +38,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
       themeMode: 'light', 
   }, 
   }
+
   const metaMaskConfig = metaMask(metamaskOptions);
   const walletConnectConfig = walletConnect(walletConnectOptions);
 
@@ -51,6 +53,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
   } = getAccount(config);
   const dashboardContext = useContext(DashboardContext);
   const defaultConnector = walletConnectConfig;
+  const defaultChainId = AssetChainMainnet.id
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
@@ -105,7 +108,7 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
     try {
       if (!isConnected) {
         logConsole("Connect EVM wallet");
-        const result = await connect(config, { connector: defaultConnector, chainId: AssetChainMainnet.id });
+        const result = await connect(config, { connector: defaultConnector, chainId: defaultChainId });
         if (result) {
           logConsole({ result });
           setEvmConnected(true);
@@ -132,9 +135,9 @@ export const useEvmWallet = ({ projectId, infuraApiKey, metadata }: EVM) => {
 
   const sendTransactionEvm = async (txParams: any) => {
     try {
-      if (AssetChainMainnet.id !== chainId) {
+      if (defaultChainId !== chainId) {
         logConsole("ChainId mismatch");
-        await switchChain(config, { chainId: AssetChainMainnet.id });
+        await switchChain(config, { chainId: defaultChainId });
         return;
       }
 

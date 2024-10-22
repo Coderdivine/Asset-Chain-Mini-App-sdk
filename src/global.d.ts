@@ -1,3 +1,5 @@
+import { Chain } from "viem";
+
 interface WalletAsset {
   id: number;
   image: string;
@@ -66,6 +68,7 @@ interface EVM {
   projectId: string, 
   infuraApiKey: string, 
   metadata: any; 
+  network: Chain;
 }
 
 declare module "wagmi" {

@@ -1,5 +1,5 @@
 {
-  "name": "assetchain-telegram-app-starter-kit",
+  "name": "assetchain-telegram-app-starter-kit", 
   "version": "0.0.1",
   "description": "This starter kit provides a foundational setup for building Telegram mini apps on Asset Chain.",
   "main": "./dist/index.js",

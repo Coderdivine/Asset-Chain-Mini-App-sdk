@@ -4,10 +4,11 @@ import { NETWORKS } from "@/configs/networks";
 import { useTonWallet } from "@/hooks/useTonWallet";
 import { useEvmWallet } from "@/hooks/useEvmWallet";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// @ts-expect-error: Ignore wagmi's error
 import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "@/configs/wagmiConfig";
 import { CreateConnectorFn } from "@wagmi/core";
+import { Chain } from "viem";
+import { DashboardContextType } from "@/global";
 
 const queryClientOptions = new QueryClient({
   defaultOptions: {
@@ -45,14 +46,17 @@ export function AssetChainKit({
   infuraApiKey,
   metadata,
   defaultConnector,
+  network
 }:{
   children: ReactNode;
   manifestUrl?: string;
   projectId: string;
   infuraApiKey: string;
   metadata: any;
+  network: Chain;
   defaultConnector?: CreateConnectorFn | undefined;
 }) {
+
   const [tonConnected, setTonConnected] = useState(false);
   const [evmConnected, setEvmConnected] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<any>(
@@ -68,6 +72,7 @@ export function AssetChainKit({
     projectId,
     infuraApiKey,
     metadata,
+    network
   });
 
   const onlyOneWallet = () => {

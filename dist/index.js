@@ -1,25 +1,3 @@
-// src/configs/index.ts
-var INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY || "";
-var PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID || "";
-var MANIFEST_URL = process.env.NEXT_PUBLIC_MANIFEST_URL || "";
-var configs = {
-  INFURA_KEY,
-  PROJECT_ID,
-  MANIFEST_URL
-};
-
-// src/pages/App.tsx
-import { createContext, useEffect as useEffect3, useState as useState2 } from "react";
-
-// src/utils/logConsole.tsx
-var debugMode = false;
-var logConsole = (...args) => {
-  if (debugMode) {
-    return console.log(...args);
-  }
-  return;
-};
-
 // src/configs/networks.ts
 var NETWORKS = {
   "assetchain_mainnet": {
@@ -56,6 +34,31 @@ var NETWORKS = {
     explorerUrl: "https://etherscan.io",
     rpcUrl: "https://ethereum.org"
   }
+};
+
+// src/configs/index.ts
+var INFURA_KEY = process.env.NEXT_PUBLIC_INFURA_KEY || "";
+var PROJECT_ID = process.env.NEXT_PUBLIC_PROJECT_ID || "";
+var MANIFEST_URL = process.env.NEXT_PUBLIC_MANIFEST_URL || "";
+var configs = {
+  INFURA_KEY,
+  PROJECT_ID,
+  MANIFEST_URL,
+  NETWORKS,
+  AssetChainMainnet: NETWORKS.assetchain_mainnet,
+  AssetChainTestnet: NETWORKS.assetchain_testnet
+};
+
+// src/pages/App.tsx
+import { createContext, useEffect as useEffect3, useState as useState2 } from "react";
+
+// src/utils/logConsole.tsx
+var debugMode = false;
+var logConsole = (...args) => {
+  if (debugMode) {
+    return console.log(...args);
+  }
+  return;
 };
 
 // src/hooks/useTonWallet.ts
@@ -170,7 +173,8 @@ import {
   connect,
   disconnect,
   sendTransaction,
-  reconnect
+  reconnect,
+  switchChain
 } from "@wagmi/core";
 import { parseEther, parseGwei } from "viem";
 
@@ -237,8 +241,6 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
   } = getAccount(wagmiConfig);
   const dashboardContext = useContext2(DashboardContext);
   const defaultConnector = walletConnectConfig;
-  const switchChain = (chainId2) => {
-  };
   if (!dashboardContext) {
     throw new Error(
       "useDashboardContext must be used within a DashboardProvider"
@@ -289,7 +291,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
     try {
       if (!isConnected) {
         logConsole("Connect EVM wallet");
-        const result = await connect(wagmiConfig, { connector: defaultConnector });
+        const result = await connect(wagmiConfig, { connector: defaultConnector, chainId: AssetChainMainnet.id });
         if (result) {
           logConsole({ result });
           setEvmConnected(true);
@@ -316,7 +318,7 @@ var useEvmWallet = ({ projectId, infuraApiKey, metadata }) => {
     try {
       if (AssetChainMainnet.id !== chainId) {
         logConsole("ChainId mismatch");
-        await switchChain({ chainId: AssetChainMainnet.id });
+        await switchChain(wagmiConfig, { chainId: AssetChainMainnet.id });
         return;
       }
       const result = await sendTransaction(wagmiConfig, {
