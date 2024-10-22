@@ -1,7 +1,7 @@
 {
   "name": "assetchain-connect-test" ,
   "sec":"assetchain-telegram-app-starter-kit",
-  "version": "0.0.4",
+  "version": "0.0.3",
   "description": "This starter kit provides a foundational setup for building Telegram mini apps on Asset Chain.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
