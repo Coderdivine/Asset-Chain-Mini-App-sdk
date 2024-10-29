@@ -25,6 +25,22 @@ For questions or suggestions, just say Hi on [Telegram](https://t.me/assetchainb
 We're always glad to help.
 
 ## Get Started
+To get started, follow the steps below:
+
+1. Clone this repo
+2. cd into any of the projects
+3. Install the project's dependencies
+
+``` bash
+git clone https://github.com/xendfinance/assetchain-telegram-starterkit-demo-app.git
+cd assetchain-telegram-starterkit-demo-app
+```
+
+``` bash
+npm install
+npm run dev
+```
+
 
 ### 1. **Imports and Initial Setup**
 
@@ -337,3 +353,13 @@ export default ConnectButton;
 - It also displays the connected wallet addresses, with options to copy them.
 - Forms are provided for sending transactions to the connected networks (TON and EVM).
 - Utility functions (`onCopy`, `concatAddress`) and hooks (`useEvmWallet`, `useTonWallet`) are leveraged to handle blockchain-related actions efficiently.
+
+---
+
+### Getting Started with Telegram Mini Apps
+
+To start building a Telegram Mini App:
+
+- **Read the Docs**: Visit the [Telegram Mini Apps Guide](https://core.telegram.org/bots/webapps#initializing-mini-apps) for steps to set up and initialize your app.
+
+--- 
